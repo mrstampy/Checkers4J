@@ -370,19 +370,21 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 
 	private List<PieceState> createState(List<Piece> list) {
 		List<PieceState> state = new ArrayList<>();
-
-		for (Piece p : list) {
-			PieceState ps = new PieceState();
-
-			ps.setColour(p.getColour());
-			ps.setKinged(p.isKinged());
-			ps.setPosition(p.getPosition());
-			ps.setNumber(p.getNumber());
-
-			state.add(ps);
-		}
+		
+		list.forEach(p -> addToState(p, state));
 
 		return state;
+	}
+
+	private void addToState(Piece p, List<PieceState> list) {
+		PieceState ps = new PieceState();
+
+		ps.setColour(p.getColour());
+		ps.setKinged(p.isKinged());
+		ps.setPosition(p.getPosition());
+		ps.setNumber(p.getNumber());
+
+		list.add(ps);
 	}
 
 	/*
