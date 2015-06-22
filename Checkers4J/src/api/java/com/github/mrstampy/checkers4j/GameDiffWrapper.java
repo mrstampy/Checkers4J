@@ -119,16 +119,16 @@ public class GameDiffWrapper {
 		if (!isReturnDiff()) return newState;
 
 		List<PieceState> diff = new ArrayList<>();
-
-		for (PieceState ps : newState) {
-			PieceState old = getOld(ps, oldState);
-
-			if (unchanged(ps, old)) continue;
-
-			diff.add(ps);
-		}
+		
+		newState.stream().filter(p -> isChanged(p, oldState)).forEach(p -> diff.add(p));
 
 		return diff;
+	}
+	
+	private boolean isChanged(PieceState piece, List<PieceState> oldState) {
+		PieceState old = getOld(piece, oldState);
+
+		return !unchanged(piece, old);
 	}
 
 	private boolean unchanged(PieceState ps, PieceState old) {
