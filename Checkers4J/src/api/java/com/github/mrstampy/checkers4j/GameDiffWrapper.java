@@ -21,6 +21,7 @@ package com.github.mrstampy.checkers4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 
@@ -136,9 +137,9 @@ public class GameDiffWrapper {
 	}
 
 	private PieceState getOld(PieceState ps, List<PieceState> oldState) {
-		for (PieceState old : oldState) {
-			if (samePiece(ps, old)) return old;
-		}
+		Optional<PieceState> op = oldState.stream().filter(o -> samePiece(ps, o)).findFirst();
+		
+		if(op.isPresent()) return op.get();
 
 		throw new IllegalStateException("Should never get here...");
 	}
