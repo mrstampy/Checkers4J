@@ -335,17 +335,19 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 		this.state = state;
 
 		byColour.clear();
-
-		for (Piece piece : state) {
-			List<Piece> list = byColour.get(piece.getColour());
-			if (list == null) {
-				list = new ArrayList<>();
-				byColour.put(piece.getColour(), list);
-			}
-			list.add(piece);
-		}
+		
+		state.forEach(p -> addByColour(p));
 
 		setStateImpl(state);
+	}
+
+	private void addByColour(Piece piece) {
+		List<Piece> list = byColour.get(piece.getColour());
+		if (list == null) {
+			list = new ArrayList<>();
+			byColour.put(piece.getColour(), list);
+		}
+		list.add(piece);
 	}
 
 	/**
