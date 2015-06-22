@@ -16,13 +16,13 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package com.github.mrstampy.checkers4j.api;
+package com.github.mrstampy.checkers4j;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.mrstampy.checkers4j.PieceState;
+import com.github.mrstampy.checkers4j.api.CheckerGame;
 
 // TODO: Auto-generated Javadoc
 /**
