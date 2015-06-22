@@ -1,0 +1,40 @@
+apply plugin: "java"
+apply plugin: "maven"
+
+group = "io.github.mrstampy.checkers4j"
+version = 1.0
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets.all { set ->
+    def jarTask = task("${set.name}Jar", type: Jar) {
+        baseName = baseName + "-$set.name"
+        from set.output
+    }
+
+    artifacts {
+        archives jarTask
+    }
+}
+
+sourceSets {
+    api
+    impl
+}
+
+dependencies {
+    implCompile sourceSets.api.output
+
+    testCompile 'junit:junit:4.12'
+    testCompile sourceSets.api.output
+    testCompile sourceSets.impl.output
+    runtime configurations.apiRuntime
+    runtime configurations.implRuntime
+}
+
+jar {
+    from sourceSets.api.output
+    from sourceSets.impl.output
+}
