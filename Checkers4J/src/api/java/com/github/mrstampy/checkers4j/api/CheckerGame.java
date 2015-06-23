@@ -200,4 +200,11 @@ public interface CheckerGame extends Serializable {
 	 * @return true, if is draw
 	 */
 	boolean isDraw();
+
+	/**
+	 * Returns the rules for this game.
+	 *
+	 * @return the rules
+	 */
+	CheckerRules getRules();
 }

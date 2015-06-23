@@ -22,7 +22,6 @@ import static com.github.mrstampy.checkers4j.standard.CheckerBoard.splitDiff;
 import static com.github.mrstampy.checkers4j.standard.StandardCheckerRules.BLACK_NUM;
 import static com.github.mrstampy.checkers4j.standard.StandardCheckerRules.WHITE_NUM;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.mrstampy.checkers4j.AbstractCheckerGame;
@@ -54,6 +53,22 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * com.github.mrstampy.checkers4j.AbstractCheckerGame#initialize(com.github
+	 * .mrstampy.checkers4j.api.CheckerRules)
+	 */
+	@Override
+	public void initialize(CheckerRules rules) {
+		super.initialize(rules);
+
+		board = new CheckerBoard(rules.getBoardWidth(), rules.getBoardHeight());
+
+		getFullState().forEach(p -> addPieceToBoard(p));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#canMove(int)
 	 */
 	@Override
@@ -62,11 +77,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 
 		if (list == null || list.isEmpty()) return false;
 
-		for (Piece piece : list) {
-			if (canMove(piece)) return true;
-		}
-
-		return false;
+		return list.stream().filter(p -> canMove(p)).findAny().isPresent();
 	}
 
 	/*
@@ -104,28 +115,6 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		}
 
 		setNextPlayer(nextPlayer);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.AbstractCheckerGame#createPieces(int,
-	 * com.github.mrstampy.checkers4j.api.CheckerRules)
-	 */
-	@Override
-	protected List<Piece> createPieces(int pieceColour, CheckerRules rules) {
-		if (board == null) board = new CheckerBoard(rules.getBoardWidth(), rules.getBoardHeight());
-
-		List<Piece> pieces = new ArrayList<>();
-
-		for (int i = 1; i <= 12; i++) {
-			Piece piece = new Piece(rules, pieceColour, i);
-			pieces.add(piece);
-
-			addPieceToBoard(piece);
-		}
-
-		return pieces;
 	}
 
 	/*

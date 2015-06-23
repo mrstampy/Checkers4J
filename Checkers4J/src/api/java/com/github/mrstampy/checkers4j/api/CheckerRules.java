@@ -126,4 +126,11 @@ public interface CheckerRules extends Serializable {
 	 * @return true, if is kingable
 	 */
 	boolean isKingable(Piece piece);
+
+	/**
+	 * Returns the number of pieces for the game.
+	 *
+	 * @return the number of pieces
+	 */
+	int getNumberOfPieces();
 }

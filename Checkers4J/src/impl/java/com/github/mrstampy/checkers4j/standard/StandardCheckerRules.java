@@ -251,6 +251,16 @@ public class StandardCheckerRules implements CheckerRules {
 		return BLACK_NUM == piece.getColour() ? pos < BLACK_KING_LIMIT : pos >= WHITE_KING_LIMIT;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.api.CheckerRules#getNumberOfPieces()
+	 */
+	@Override
+	public int getNumberOfPieces() {
+		return 12;
+	}
+
 	private int getWhiteStartPosition(int pieceNumber) {
 		switch (pieceNumber) {
 		case 1:

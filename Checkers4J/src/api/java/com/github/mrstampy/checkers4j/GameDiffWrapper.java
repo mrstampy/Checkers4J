@@ -120,12 +120,12 @@ public class GameDiffWrapper {
 		if (!isReturnDiff()) return newState;
 
 		List<PieceState> diff = new ArrayList<>();
-		
+
 		newState.stream().filter(p -> isChanged(p, oldState)).forEach(p -> diff.add(p));
 
 		return diff;
 	}
-	
+
 	private boolean isChanged(PieceState piece, List<PieceState> oldState) {
 		PieceState old = getOld(piece, oldState);
 
@@ -138,8 +138,8 @@ public class GameDiffWrapper {
 
 	private PieceState getOld(PieceState ps, List<PieceState> oldState) {
 		Optional<PieceState> op = oldState.stream().filter(o -> samePiece(ps, o)).findFirst();
-		
-		if(op.isPresent()) return op.get();
+
+		if (op.isPresent()) return op.get();
 
 		throw new IllegalStateException("Should never get here...");
 	}

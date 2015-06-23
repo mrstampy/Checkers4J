@@ -113,16 +113,15 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 		setGameStateInternal(GameState.INITIALIZED);
 	}
 
-	/**
-	 * Implement to create the pieces for the specified colour.
-	 *
-	 * @param pieceColour
-	 *          the piece colour
-	 * @param rules
-	 *          the rules
-	 * @return the list
-	 */
-	protected abstract List<Piece> createPieces(int pieceColour, CheckerRules rules);
+	private List<Piece> createPieces(int pieceColour, CheckerRules rules) {
+		List<Piece> pieces = new ArrayList<>();
+
+		for (int i = 1; i <= rules.getNumberOfPieces(); i++) {
+			pieces.add(new Piece(rules, pieceColour, i));
+		}
+
+		return pieces;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -335,7 +334,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 		this.state = state;
 
 		byColour.clear();
-		
+
 		state.forEach(p -> addByColour(p));
 
 		setStateImpl(state);
@@ -372,7 +371,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 
 	private List<PieceState> createState(List<Piece> list) {
 		List<PieceState> state = new ArrayList<>();
-		
+
 		list.forEach(p -> addToState(p, state));
 
 		return state;
@@ -540,6 +539,16 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	public void draw() {
 		setGameStateInternal(GameState.FINISHED);
 		setDraw(true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getRules()
+	 */
+	@Override
+	public CheckerRules getRules() {
+		return rules;
 	}
 
 }
