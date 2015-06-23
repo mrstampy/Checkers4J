@@ -27,6 +27,8 @@ import java.util.List;
 import com.github.mrstampy.checkers4j.AbstractCheckerGame;
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
+import com.github.mrstampy.checkers4j.ex.CheckersStateException;
+import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -125,7 +127,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	 * mrstampy.checkers4j.Piece, int)
 	 */
 	@Override
-	protected void moveImpl(Piece piece, int toPosition) {
+	protected void moveImpl(Piece piece, int toPosition) throws CheckersStateException {
 		int y = getY(piece.getPosition());
 		int x = getX(piece.getPosition(), y);
 
@@ -134,8 +136,8 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 
 		Piece toPiece = board.getBoardPiece(toX, toY);
 		if (toPiece != null) {
-			throw new IllegalStateException("Cannot move " + piece + " to " + toPosition + " as " + toPiece
-					+ " already occupies it");
+			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
+					"Cannot move " + piece + " to " + toPosition + " as " + toPiece + " already occupies it");
 		}
 
 		if (isJump(x, toX, y, toY)) {
@@ -158,23 +160,28 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		board.setBoardPiece(piece, x, y);
 	}
 
-	private void evaluate(Piece piece, int x, int y, int toPosition, int toX, int toY) {
+	private void evaluate(Piece piece, int x, int y, int toPosition, int toX, int toY) throws CheckersStateException {
 		int xDiff = x - toX;
 		int yDiff = y - toY;
 		if (Math.abs(xDiff) != 1 || Math.abs(yDiff) != 1) {
-			throw new IllegalStateException("Illegal move: piece " + piece + " to " + toPosition);
+			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
+					"Illegal move: piece " + piece + " to " + toPosition);
 		}
 	}
 
-	private void evaluateJump(Piece piece, int x, int y, int toPosition, int toX, int toY) {
+	private void evaluateJump(Piece piece, int x, int y, int toPosition, int toX, int toY) throws CheckersStateException {
 		int jumpX = splitDiff(x, toX);
 		int jumpY = splitDiff(y, toY);
 
 		Piece toJump = board.getBoardPiece(jumpX, jumpY);
-		if (toJump == null) throw new IllegalStateException("No piece at " + jumpX + ":" + jumpY + " to jump");
+		if (toJump == null) {
+			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_JUMP,
+					"No piece at " + jumpX + ":" + jumpY + " to jump");
+		}
 
 		if (toJump.getColour() == piece.getColour()) {
-			throw new IllegalStateException("Cannot jump over one's own piece: piece: " + piece + ", to jump: " + toJump);
+			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_JUMP,
+					"Cannot jump over one's own piece: piece: " + piece + ", to jump: " + toJump);
 		}
 
 		toJump.jumped();
@@ -209,18 +216,14 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	}
 
 	private int getY(int position) {
-		assert isValidPosition(position);
+		assert getRules().isValidPosition(position);
 
-		return position / rules.getBoardHeight();
+		return position / getRules().getBoardHeight();
 	}
 
 	private int getX(int position, int y) {
-		assert isValidPosition(position);
+		assert getRules().isValidPosition(position);
 
-		return position - (y * rules.getBoardHeight());
-	}
-
-	private boolean isValidPosition(int position) {
-		return rules.isValidPosition(position);
+		return position - (y * getRules().getBoardHeight());
 	}
 }

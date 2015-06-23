@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.github.mrstampy.checkers4j.api.CheckerGame;
+import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -103,8 +104,10 @@ public class GameDiffWrapper {
 	 * @param toPosition
 	 *          the to position
 	 * @return the list
+	 * @throws CheckersStateException
+	 *           the checkers state exception
 	 */
-	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) {
+	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
 		List<PieceState> newState = getCheckerGame().move(pieceColour, pieceNumber, toPosition);
 
 		return setCurrentState(newState);

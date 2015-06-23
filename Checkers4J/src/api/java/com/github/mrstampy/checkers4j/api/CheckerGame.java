@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
+import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -64,8 +65,10 @@ public interface CheckerGame extends Serializable {
 	 * @param toPosition
 	 *          the to position
 	 * @return the list
+	 * @throws CheckersStateException
+	 *           the checkers state exception
 	 */
-	List<PieceState> move(int pieceColour, int pieceNumber, int toPosition);
+	List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException;
 
 	/**
 	 * Must be invoked after all {@link #move(int, int, int)}s have been performed

@@ -27,6 +27,8 @@ import java.util.Map.Entry;
 
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
+import com.github.mrstampy.checkers4j.ex.CheckersStateException;
+import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,8 +56,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 
 	private long gameId = -1;
 
-	/** The rules. */
-	protected CheckerRules rules;
+	private CheckerRules rules;
 
 	/** The by colour. */
 	protected Map<Integer, List<Piece>> byColour = new HashMap<>();
@@ -195,17 +196,23 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#move(int, int, int)
 	 */
 	@Override
-	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) {
+	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
 		beginTurn(pieceColour);
 
-		if (GameState.STARTED != getGameState()) throw new IllegalStateException("Game " + getGameId() + " not started");
+		if (GameState.STARTED != getGameState()) {
+			throw new CheckersStateException(ErrorState.ILLEGAL_STATE, "Game " + getGameId() + " not started");
+		}
 
-		if (!rules.isValidPosition(toPosition)) throw new IllegalArgumentException("Illegal position " + toPosition);
+		if (!rules.isValidPosition(toPosition)) {
+			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_VALUE,
+					"Illegal position " + toPosition);
+		}
 
 		Piece piece = pieceCheck(pieceColour, pieceNumber);
 
 		if (!piece.directionCheck(toPosition)) {
-			throw new IllegalStateException("Cannot move " + piece + " to " + toPosition);
+			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_MOVE, "Cannot move "
+					+ piece + " to " + toPosition);
 		}
 
 		moveImpl(piece, toPosition);
@@ -228,8 +235,10 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	 *          the piece
 	 * @param toPosition
 	 *          the to position
+	 * @throws CheckersStateException
+	 *           the checkers state exception
 	 */
-	protected abstract void moveImpl(Piece piece, int toPosition);
+	protected abstract void moveImpl(Piece piece, int toPosition) throws CheckersStateException;
 
 	private void endOfGameCheck(Piece piece) {
 		if (otherColoursInPlay(piece.getColour())) return;
@@ -259,15 +268,24 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Piece pieceCheck(int pieceColour, int pieceNumber) {
+	private Piece pieceCheck(int pieceColour, int pieceNumber) throws CheckersStateException {
 		List<Piece> pieces = byColour.containsKey(pieceColour) ? byColour.get(pieceColour) : Collections.EMPTY_LIST;
 
-		if (pieces.isEmpty()) throw new IllegalStateException("No pieces for colour " + pieceColour);
+		if (pieces.isEmpty()) {
+			throw new CheckersStateException(pieceColour, pieceNumber, ErrorState.ILLEGAL_STATE, "No pieces for colour "
+					+ pieceColour);
+		}
 
 		Piece piece = getPiece(pieces, pieceNumber);
 
-		if (piece == null) throw new IllegalStateException("No piece " + pieceNumber + " for colour " + pieceColour);
-		if (piece.isJumped()) throw new IllegalStateException(piece + " has been jumped");
+		if (piece == null) {
+			throw new CheckersStateException(pieceColour, pieceNumber, ErrorState.ILLEGAL_STATE, "No piece " + pieceNumber
+					+ " for colour " + pieceColour);
+		}
+
+		if (piece.isJumped()) {
+			throw new CheckersStateException(pieceColour, pieceNumber, ErrorState.ILLEGAL_STATE, piece + " has been jumped");
+		}
 
 		return piece;
 	}
