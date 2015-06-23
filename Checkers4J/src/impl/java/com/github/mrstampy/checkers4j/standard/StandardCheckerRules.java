@@ -59,6 +59,9 @@ public class StandardCheckerRules implements CheckerRules {
 	/** The Constant BLACK. */
 	public static final String BLACK = "BLACK";
 
+	/** The number of pieces per colour. */
+	public static final int NUM_PIECES = 12;
+
 	private static final int[] VALID_COLOURS = { WHITE_NUM, BLACK_NUM };
 
 	/*
@@ -258,7 +261,7 @@ public class StandardCheckerRules implements CheckerRules {
 	 */
 	@Override
 	public int getNumberOfPieces() {
-		return 12;
+		return NUM_PIECES;
 	}
 
 	private int getWhiteStartPosition(int pieceNumber) {
