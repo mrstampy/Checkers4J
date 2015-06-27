@@ -38,14 +38,12 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
  * 
  * 1. Instantiate the subclass, setting a unique {@link #setGameId(long)} if
  * required.<br>
- * 2. Invoke {@link #initialize(CheckerRules)} with a {@link CheckerRules}
- * implementation.<br>
- * 3. The initial state prior to play is available via {@link #getState()}.<br>
- * 4. Alternate between players by invoking {@link #beginTurn(int)},
+ * 2. The initial state prior to play is available via {@link #getState()}.<br>
+ * 3. Alternate between players by invoking {@link #beginTurn(int)},
  * {@link #move(int, int, int)} until no more moves, then {@link #endTurn(int)}.<br>
- * 5. The next player is available via {@link #getNextPlayer()} and the last
+ * 4. The next player is available via {@link #getNextPlayer()} and the last
  * player via {@link #getLastPlayer()}.<br>
- * 6. {@link #hasTurn()} will return the player with a 'moves lock' on the game,
+ * 5. {@link #hasTurn()} will return the player with a 'moves lock' on the game,
  * -1 if none.<br>
  * 
  * @author burton
