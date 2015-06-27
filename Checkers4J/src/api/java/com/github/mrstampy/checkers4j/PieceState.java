@@ -32,7 +32,8 @@ import com.github.mrstampy.checkers4j.api.CheckerRules;
  *
  */
 public class PieceState implements Serializable {
-	private static final long serialVersionUID = 6705826871367585979L;
+
+	private static final long serialVersionUID = 4756881299368009487L;
 
 	private boolean kinged;
 
@@ -41,6 +42,8 @@ public class PieceState implements Serializable {
 	private int colour;
 
 	private int position;
+
+	private int id;
 
 	/**
 	 * Returns true if this piece is kinged.
@@ -119,6 +122,49 @@ public class PieceState implements Serializable {
 	 */
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	/**
+	 * Returns a unique id for this piece. Ids must be unique across games.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the unique id for this piece.
+	 *
+	 * @param id
+	 *          the new id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof PieceState)) return false;
+
+		PieceState ps = (PieceState) o;
+
+		return ps.getId() == getId() && ps.getColour() == getColour() && ps.getNumber() == getNumber();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return 17 * getId() + 21 * getColour() + 23 * getNumber();
 	}
 
 }
