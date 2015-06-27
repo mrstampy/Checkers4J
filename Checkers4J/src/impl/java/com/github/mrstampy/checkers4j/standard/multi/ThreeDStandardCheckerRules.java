@@ -24,9 +24,9 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MultiDimensionalStandardCheckerRules.
+ * The Class ThreeDStandardCheckerRules.
  */
-public class MultiDimensionalStandardCheckerRules extends StandardCheckerRules {
+public class ThreeDStandardCheckerRules extends StandardCheckerRules {
 
 	private static final long serialVersionUID = 3658691995074812524L;
 
@@ -39,8 +39,8 @@ public class MultiDimensionalStandardCheckerRules extends StandardCheckerRules {
 	 * @param numBoards
 	 *          the num boards
 	 */
-	public MultiDimensionalStandardCheckerRules(int numBoards) {
-		this(StandardCheckerRules.STD_WIDTH, StandardCheckerRules.STD_HEIGHT);
+	public ThreeDStandardCheckerRules(int numBoards) {
+		this(numBoards, StandardCheckerRules.STD_WIDTH, StandardCheckerRules.STD_HEIGHT);
 	}
 
 	/**
@@ -51,8 +51,8 @@ public class MultiDimensionalStandardCheckerRules extends StandardCheckerRules {
 	 * @param boardHeight
 	 *          the board height
 	 */
-	public MultiDimensionalStandardCheckerRules(int boardWidth, int boardHeight) {
-		this(boardWidth, boardHeight, 2);
+	public ThreeDStandardCheckerRules(int boardWidth, int boardHeight) {
+		this(2, boardWidth, boardHeight);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class MultiDimensionalStandardCheckerRules extends StandardCheckerRules {
 	 * @param boardHeight
 	 *          the board height
 	 */
-	public MultiDimensionalStandardCheckerRules(int numBoards, int boardWidth, int boardHeight) {
+	public ThreeDStandardCheckerRules(int numBoards, int boardWidth, int boardHeight) {
 		super(boardWidth, boardHeight);
 		setNumBoards(numBoards);
 	}

@@ -40,14 +40,14 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
 /**
  * The Class MultiDimensionStandardCheckerGame.
  */
-public class MultiDimensionStandardCheckerGame implements CheckerGame {
+public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	private static final long serialVersionUID = 6556554049093188540L;
 
 	/** The Constant GAME_NAME. */
 	public static final String GAME_NAME = "Multi Dimensional Standard Checkers";
 
-	private MultiDimensionalStandardCheckerRules rules;
+	private ThreeDStandardCheckerRules rules;
 	private List<StandardCheckerGame> boards = new ArrayList<>();
 
 	private int lastBoardIdx = -1;
@@ -63,8 +63,8 @@ public class MultiDimensionStandardCheckerGame implements CheckerGame {
 	/**
 	 * Instantiates a new multi dimension standard checker game.
 	 */
-	public MultiDimensionStandardCheckerGame() {
-		this(new MultiDimensionalStandardCheckerRules(2));
+	public ThreeDStandardCheckerGame() {
+		this(new ThreeDStandardCheckerRules(2));
 	}
 
 	/**
@@ -75,8 +75,8 @@ public class MultiDimensionStandardCheckerGame implements CheckerGame {
 	 * @param boardHeight
 	 *          the board height
 	 */
-	public MultiDimensionStandardCheckerGame(int boardWidth, int boardHeight) {
-		this(new MultiDimensionalStandardCheckerRules(boardWidth, boardHeight));
+	public ThreeDStandardCheckerGame(int boardWidth, int boardHeight) {
+		this(new ThreeDStandardCheckerRules(boardWidth, boardHeight, 2));
 	}
 
 	/**
@@ -85,8 +85,8 @@ public class MultiDimensionStandardCheckerGame implements CheckerGame {
 	 * @param numBoards
 	 *          the num boards
 	 */
-	public MultiDimensionStandardCheckerGame(int numBoards) {
-		this(new MultiDimensionalStandardCheckerRules(numBoards));
+	public ThreeDStandardCheckerGame(int numBoards) {
+		this(new ThreeDStandardCheckerRules(numBoards));
 	}
 
 	/**
@@ -99,8 +99,8 @@ public class MultiDimensionStandardCheckerGame implements CheckerGame {
 	 * @param boardHeight
 	 *          the board height
 	 */
-	public MultiDimensionStandardCheckerGame(int numBoards, int boardWidth, int boardHeight) {
-		this(new MultiDimensionalStandardCheckerRules(numBoards, boardWidth, boardHeight));
+	public ThreeDStandardCheckerGame(int numBoards, int boardWidth, int boardHeight) {
+		this(new ThreeDStandardCheckerRules(numBoards, boardWidth, boardHeight));
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class MultiDimensionStandardCheckerGame implements CheckerGame {
 	 * @param rules
 	 *          the rules
 	 */
-	protected MultiDimensionStandardCheckerGame(MultiDimensionalStandardCheckerRules rules) {
+	protected ThreeDStandardCheckerGame(ThreeDStandardCheckerRules rules) {
 		assert rules != null;
 
 		this.rules = rules;

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
@@ -118,8 +119,9 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 		List<Piece> pieces = new ArrayList<>();
 
 		int pno = rules.getPieceNumberOffset() + 1;
-		for (int i = pno; i - pno <= rules.getNumberOfPieces(); i++) {
-			pieces.add(new Piece(rules, pieceColour, i));
+		AtomicInteger ai = new AtomicInteger(1);
+		for (int i = pno; i - pno < rules.getNumberOfPieces(); i++) {
+			pieces.add(new Piece(rules, pieceColour, i, ai.getAndIncrement()));
 		}
 
 		return pieces;

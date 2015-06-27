@@ -30,6 +30,8 @@ public class Piece extends PieceState {
 
 	private CheckerRules rules;
 
+	private int order;
+
 	/**
 	 * Creates a coloured, numbered piece using the specified rules.
 	 *
@@ -38,14 +40,17 @@ public class Piece extends PieceState {
 	 * @param colour
 	 *          the colour
 	 * @param number
-	 *          the number
+	 *          the number, sequential starting at 1, unique to a game
+	 * @param order
+	 *          the order, sequential starting at 1, unique to a board
 	 */
-	public Piece(CheckerRules rules, int colour, int number) {
+	public Piece(CheckerRules rules, int colour, int number, int order) {
 		setRules(rules);
 		setColour(colour);
 		setNumber(number);
+		setOrder(order);
 
-		setPosition(rules.getStartPosition(colour, number));
+		setPosition(rules.getStartPosition(colour, order));
 	}
 
 	/**
@@ -160,6 +165,25 @@ public class Piece extends PieceState {
 	@Override
 	public boolean equals(Object o) {
 		return o instanceof Piece ? super.equals(o) : false;
+	}
+
+	/**
+	 * Gets the order.
+	 *
+	 * @return the order
+	 */
+	public int getOrder() {
+		return order;
+	}
+
+	/**
+	 * Sets the order.
+	 *
+	 * @param order
+	 *          the new order
+	 */
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 }
