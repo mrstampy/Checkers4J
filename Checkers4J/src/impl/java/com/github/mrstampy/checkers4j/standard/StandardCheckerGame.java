@@ -219,11 +219,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 
 	private boolean evaluateMove(Piece piece, int toPosition, int y, int x, int toY, int toX)
 			throws CheckersStateException {
-		Piece toPiece = board.getBoardPiece(toX, toY);
-		if (toPiece != null) {
-			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
-					"Cannot move " + piece + " to " + toPosition + " as " + toPiece + " already occupies it");
-		}
+		evaluateMoveTo(piece, toPosition, toY, toX);
 
 		if (isJump(x, toX, y, toY)) {
 			evaluateJump(piece, x, y, toPosition, toX, toY);
@@ -234,6 +230,15 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 
 		throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
 				"Cannot move " + piece + " to " + toPosition);
+	}
+
+	private void evaluateMoveTo(Piece piece, int toPosition, int toY, int toX) throws CheckersStateException {
+		Piece toPiece = board.getBoardPiece(toX, toY);
+		
+		if (toPiece == null) return;
+
+		throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
+				"Cannot move " + piece + " to " + toPosition + " as " + toPiece + " already occupies it");
 	}
 
 	/**
