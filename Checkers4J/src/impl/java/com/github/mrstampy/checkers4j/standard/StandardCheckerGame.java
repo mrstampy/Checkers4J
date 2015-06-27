@@ -218,8 +218,11 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		if (isJump(x, toX, y, toY)) {
 			evaluateJump(piece, x, y, toPosition, toX, toY);
 			jumped = true;
-		} else {
+		} else if (isMove(x, toX, y, toY)) {
 			evaluate(piece, x, y, toPosition, toX, toY);
+		} else {
+			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
+					"Cannot move " + piece + " to " + toPosition);
 		}
 
 		piece.setPosition(toPosition);
@@ -295,10 +298,18 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	}
 
 	private boolean isJump(int x, int toX, int y, int toY) {
+		return isMove(x, toX, y, toY, 2);
+	}
+
+	private boolean isMove(int x, int toX, int y, int toY) {
+		return isMove(x, toX, y, toY, 1);
+	}
+
+	private boolean isMove(int x, int toX, int y, int toY, int factor) {
 		int xDiff = x - toX;
 		int yDiff = y - toY;
 
-		return Math.abs(yDiff) == 2 && Math.abs(xDiff) == 2;
+		return Math.abs(yDiff) == factor && Math.abs(xDiff) == factor;
 	}
 
 	private boolean canMoveKing(Piece piece) {
