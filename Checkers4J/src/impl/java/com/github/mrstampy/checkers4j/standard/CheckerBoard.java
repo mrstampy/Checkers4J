@@ -87,7 +87,8 @@ public class CheckerBoard {
 	}
 
 	/**
-	 * Returns true if the piece identified by x & y has a potential move to make.
+	 * Returns true if the piece identified by x & y has a potential move or jump
+	 * to make.
 	 *
 	 * @param forward
 	 *          true if evaluating forward moves, else false
@@ -98,13 +99,41 @@ public class CheckerBoard {
 	 * @return true, if successful
 	 */
 	public boolean canMoveOrJump(boolean forward, int x, int y) {
+		return canMove(forward, x, y) || canJump(forward, x, y);
+	}
+
+	/**
+	 * Returns true if the piece identified by x & y has a potential move to make.
+	 *
+	 * @param forward
+	 *          true if evaluating forward moves, else false
+	 * @param x
+	 *          the x
+	 * @param y
+	 *          the y
+	 * @return true, if successful
+	 */
+	public boolean canMove(boolean forward, int x, int y) {
 		if (canMove(x, y, x + 1, forward)) return true;
-		if (canMove(x, y, x - 1, forward)) return true;
 
+		return canMove(x, y, x - 1, forward);
+	}
+
+	/**
+	 * Returns true if the piece identified by x & y has a potential jump to make.
+	 *
+	 * @param forward
+	 *          true if evaluating forward moves, else false
+	 * @param x
+	 *          the x
+	 * @param y
+	 *          the y
+	 * @return true, if successful
+	 */
+	public boolean canJump(boolean forward, int x, int y) {
 		if (canJump(x, y, x + 2, forward)) return true;
-		if (canJump(x, y, x - 2, forward)) return true;
 
-		return false;
+		return canJump(x, y, x - 2, forward);
 	}
 
 	/**

@@ -26,6 +26,7 @@ import java.util.List;
 
 import com.github.mrstampy.checkers4j.AbstractCheckerGame;
 import com.github.mrstampy.checkers4j.Piece;
+import com.github.mrstampy.checkers4j.PieceState;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
@@ -114,6 +115,53 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * com.github.mrstampy.checkers4j.api.CheckerGame#canMove(com.github.mrstampy
+	 * .checkers4j.Piece)
+	 */
+	public boolean canMove(Piece piece) {
+		if (piece.isJumped()) return false;
+
+		return piece.isKinged() ? canMoveKing(piece) : canMove(piece, piece.getColour() == WHITE_NUM);
+	}
+
+	/**
+	 * Convenience method to move a piece to a grid position specified by toX and
+	 * toY.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
+	 * @param pieceNumber
+	 *          the piece number
+	 * @param toX
+	 *          the to x
+	 * @param toY
+	 *          the to y
+	 * @return the list
+	 * @throws CheckersStateException
+	 *           the checkers state exception
+	 */
+	public List<PieceState> move(int pieceColour, int pieceNumber, int toX, int toY) throws CheckersStateException {
+		return move(pieceColour, pieceNumber, getPositionFromGrid(toX, toY));
+	}
+
+	/**
+	 * Helper method to convert a grid position to an absolute position. Numbering
+	 * for grid and absolute position starts at zero.
+	 *
+	 * @param x
+	 *          the x
+	 * @param y
+	 *          the y
+	 * @return the position from grid
+	 */
+	public int getPositionFromGrid(int x, int y) {
+		return getRules().getBoardHeight() * y + x;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * com.github.mrstampy.checkers4j.AbstractCheckerGame#setStateImpl(java.util
 	 * .List)
 	 */
@@ -166,8 +214,10 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 					"Cannot move " + piece + " to " + toPosition + " as " + toPiece + " already occupies it");
 		}
 
+		boolean jumped = false;
 		if (isJump(x, toX, y, toY)) {
 			evaluateJump(piece, x, y, toPosition, toX, toY);
+			jumped = true;
 		} else {
 			evaluate(piece, x, y, toPosition, toX, toY);
 		}
@@ -175,6 +225,36 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		piece.setPosition(toPosition);
 		board.setBoardPiece(piece, toX, toY);
 		board.setBoardPiece(null, x, y);
+
+		if (endingTurn(jumped, piece)) endTurn(piece.getColour());
+	}
+
+	/**
+	 * Returns true if the turn is over for the specified piece.
+	 *
+	 * @param jumped
+	 *          the jumped
+	 * @param piece
+	 *          the piece
+	 * @return true, if successful
+	 */
+	protected boolean endingTurn(boolean jumped, Piece piece) {
+		return isAutoEndTurn() && (!jumped || !canJump(piece));
+	}
+
+	private boolean canJump(Piece piece) {
+		return piece.isKinged() ? canKingJump(piece) : canJump(piece, piece.getColour() == WHITE_NUM);
+	}
+
+	private boolean canKingJump(Piece piece) {
+		return canJump(piece, true) || canJump(piece, false);
+	}
+
+	private boolean canJump(Piece piece, boolean forward) {
+		int y = getRules().getY(piece.getPosition());
+		int x = getRules().getX(piece.getPosition());
+
+		return board.canJump(forward, x, y);
 	}
 
 	private void addPieceToBoard(Piece piece) {
@@ -219,12 +299,6 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		int yDiff = y - toY;
 
 		return Math.abs(yDiff) == 2 && Math.abs(xDiff) == 2;
-	}
-
-	private boolean canMove(Piece piece) {
-		if (piece.isJumped()) return false;
-
-		return piece.isKinged() ? canMoveKing(piece) : canMove(piece, piece.getColour() == WHITE_NUM);
 	}
 
 	private boolean canMoveKing(Piece piece) {

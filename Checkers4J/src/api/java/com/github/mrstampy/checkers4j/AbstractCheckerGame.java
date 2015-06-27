@@ -78,6 +78,8 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 
 	private boolean draw = false;
 
+	private boolean autoEndTurn = true;
+
 	/**
 	 * Returns the underlying list of all pieces. Use {@link #getState()} if only
 	 * interested in state information; this method facilitates direct piece
@@ -565,6 +567,26 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	@Override
 	public CheckerRules getRules() {
 		return rules;
+	}
+
+	/**
+	 * True by default.
+	 *
+	 * @return true, if is auto end turn
+	 */
+	@Override
+	public boolean isAutoEndTurn() {
+		return autoEndTurn;
+	}
+
+	/**
+	 * Sets the auto end turn.
+	 *
+	 * @param autoEndTurn
+	 *          the new auto end turn
+	 */
+	public void setAutoEndTurn(boolean autoEndTurn) {
+		this.autoEndTurn = autoEndTurn;
 	}
 
 }

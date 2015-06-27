@@ -192,6 +192,15 @@ public interface CheckerGame extends Serializable {
 	boolean canMove(int pieceColour);
 
 	/**
+	 * Returns true if the specified piece is able to make a move.
+	 *
+	 * @param piece
+	 *          the piece
+	 * @return true, if successful
+	 */
+	boolean canMove(Piece piece);
+
+	/**
 	 * Invoked when pieces can move but no end to the game can be had. Must be
 	 * agreed by both players before invoking.
 	 */
@@ -210,4 +219,13 @@ public interface CheckerGame extends Serializable {
 	 * @return the rules
 	 */
 	CheckerRules getRules();
+
+	/**
+	 * Returns true if a player's turn is to automatically end after a move. If
+	 * true then the game will automatically end a turn when no more moves can be
+	 * instantiator.
+	 *
+	 * @return true, if is auto end turn
+	 */
+	boolean isAutoEndTurn();
 }

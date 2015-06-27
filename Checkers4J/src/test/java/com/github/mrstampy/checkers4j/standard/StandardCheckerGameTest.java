@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
@@ -77,6 +78,62 @@ public class StandardCheckerGameTest {
 	}
 
 	/**
+	 * Test end of turn.
+	 *
+	 * @throws Exception
+	 *           the exception
+	 */
+	@Test
+	public void testEndOfTurn() throws Exception {
+		List<Piece> pieces = game.getFullState();
+
+		setEndOfTurnState(pieces);
+		game.setState(pieces);
+
+		game.move(BLACK_NUM, 1, 24);
+		assertEquals(BLACK_NUM, game.hasTurn());
+
+		game.move(BLACK_NUM, 1, 10);
+		assertEquals(-1, game.hasTurn());
+	}
+
+	/*
+	 * white 1 @ 2,1 white 2 @ 4,1 black 1 kinged @ 5,2
+	 */
+	private void setEndOfTurnState(List<Piece> pieces) {
+		pieces.forEach(p -> setEndOfTurnState(p));
+	}
+
+	private void setEndOfTurnState(Piece p) {
+		switch (p.getColour()) {
+		case WHITE_NUM:
+			switch (p.getNumber()) {
+			case 1:
+				p.setPosition(17);
+				break;
+			case 2:
+				p.setPosition(33);
+				break;
+			default:
+				p.jumped();
+				break;
+			}
+			break;
+		case BLACK_NUM:
+			switch (p.getNumber()) {
+			case 1:
+				p.setPosition(42);
+				p.setKinged(true);
+				break;
+			default:
+				p.jumped();
+				break;
+			}
+			break;
+		}
+	}
+
+	/**
 	 * Test start.
 	 *
 	 * @throws Exception
@@ -87,6 +144,8 @@ public class StandardCheckerGameTest {
 		assertEquals(-1, game.getWinningColour());
 		assertEquals(-1, game.getLastPlayer());
 		assertEquals(-1, game.hasTurn());
+
+		game.setAutoEndTurn(false);
 
 		for (int i = 0; i < 63; i++) {
 			failedMove(WHITE_NUM, 1, i, "Illegal move");
