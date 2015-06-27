@@ -208,16 +208,26 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		int toY = getRules().getY(toPosition);
 		int toX = getRules().getX(toPosition);
 
+		boolean jumped = evaluateMove(piece, toPosition, y, x, toY, toX);
+
+		piece.setPosition(toPosition);
+		board.setBoardPiece(piece, toX, toY);
+		board.setBoardPiece(null, x, y);
+
+		if (endingTurn(jumped, piece)) endTurn(piece.getColour());
+	}
+
+	private boolean evaluateMove(Piece piece, int toPosition, int y, int x, int toY, int toX)
+			throws CheckersStateException {
 		Piece toPiece = board.getBoardPiece(toX, toY);
 		if (toPiece != null) {
 			throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,
 					"Cannot move " + piece + " to " + toPosition + " as " + toPiece + " already occupies it");
 		}
 
-		boolean jumped = false;
 		if (isJump(x, toX, y, toY)) {
 			evaluateJump(piece, x, y, toPosition, toX, toY);
-			jumped = true;
+			return true;
 		} else if (isMove(x, toX, y, toY)) {
 			evaluate(piece, x, y, toPosition, toX, toY);
 		} else {
@@ -225,11 +235,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 					"Cannot move " + piece + " to " + toPosition);
 		}
 
-		piece.setPosition(toPosition);
-		board.setBoardPiece(piece, toX, toY);
-		board.setBoardPiece(null, x, y);
-
-		if (endingTurn(jumped, piece)) endTurn(piece.getColour());
+		return false;
 	}
 
 	/**
