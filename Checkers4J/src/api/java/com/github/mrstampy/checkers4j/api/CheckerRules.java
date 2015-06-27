@@ -133,4 +133,24 @@ public interface CheckerRules extends Serializable {
 	 * @return the number of pieces
 	 */
 	int getNumberOfPieces();
+
+	/**
+	 * Returns the grid X position of the specified absolute position, starting at
+	 * 0 and increasing to {@link #getBoardWidth()} - 1;.
+	 *
+	 * @param position
+	 *          the position
+	 * @return the x
+	 */
+	int getX(int position);
+
+	/**
+	 * Returns the grid Y position of the specified absolute position, starting at
+	 * 0 and increasing to {@link #getBoardHeight()} - 1;.
+	 *
+	 * @param position
+	 *          the position
+	 * @return the y
+	 */
+	int getY(int position);
 }

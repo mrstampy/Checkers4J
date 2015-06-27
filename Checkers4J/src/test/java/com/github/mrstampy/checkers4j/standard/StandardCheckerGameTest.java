@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import com.github.mrstampy.checkers4j.PieceState;
 import com.github.mrstampy.checkers4j.api.CheckerGame;
+import com.github.mrstampy.checkers4j.api.CheckerRules;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -46,7 +47,6 @@ import com.github.mrstampy.checkers4j.api.CheckerGame;
 public class StandardCheckerGameTest {
 
 	private StandardCheckerGame game;
-	private StandardCheckerRules rules = new StandardCheckerRules();
 	private List<PieceState> initial;
 
 	private Random rand = new Random(System.nanoTime());
@@ -62,16 +62,15 @@ public class StandardCheckerGameTest {
 	@Before
 	public void before() throws Exception {
 		game = new StandardCheckerGame();
-		game.initialize(rules);
 		initial = game.getState();
 		validateInitialState();
 	}
 
 	private void validateInitialState() {
-		initial.stream().forEach(e -> validateInitialState(e));
+		initial.stream().forEach(e -> validateInitialState(e, game.getRules()));
 	}
 
-	private void validateInitialState(PieceState ps) {
+	private void validateInitialState(PieceState ps, CheckerRules rules) {
 		int expected = rules.getStartPosition(ps.getColour(), ps.getNumber());
 
 		assertEquals(expected, ps.getPosition());
@@ -122,6 +121,22 @@ public class StandardCheckerGameTest {
 	}
 
 	/**
+	 * Test10 x10.
+	 *
+	 * @throws Exception
+	 *           the exception
+	 */
+	@Test
+	public void test10X10() throws Exception {
+		StandardCheckerGame scg = new StandardCheckerGame(new StandardCheckerRules(10, 10));
+
+		initial = scg.getState();
+		initial.stream().forEach(e -> validateInitialState(e, scg.getRules()));
+
+		testGame(scg);
+	}
+
+	/**
 	 * Test random game.
 	 *
 	 * @throws Exception
@@ -130,12 +145,12 @@ public class StandardCheckerGameTest {
 	@Test
 	public void testRandomGame() throws Exception {
 		for (int i = 0; i < 10; i++) {
-			testGame();
+			testGame(game);
 			before();
 		}
 	}
 
-	private void testGame() {
+	private void testGame(CheckerGame game) {
 		AtomicBoolean b = new AtomicBoolean(true);
 
 		Future<?> f = svc.schedule(() -> b.set(false), 2, TimeUnit.SECONDS);
@@ -144,7 +159,7 @@ public class StandardCheckerGameTest {
 		while (CheckerGame.GameState.FINISHED != game.getGameState() && b.get()) {
 			// System.out.println("Making move for colour " + colour + ", game state "
 			// + game.getGameState());
-			List<PieceState> list = makeMove(colour);
+			List<PieceState> list = makeMove(colour, game);
 			// list.stream().forEach(e -> print(e));
 			game.endTurn(colour);
 			colour = game.getNextPlayer();
@@ -152,7 +167,7 @@ public class StandardCheckerGameTest {
 
 		if (b.get()) {
 			f.cancel(true);
-			System.out.println("Game won by " + rules.toColourName(game.getWinningColour()));
+			System.out.println("Game won by " + game.getRules().toColourName(game.getWinningColour()));
 		} else {
 			game.draw();
 			System.out.println("Draw");
@@ -162,16 +177,16 @@ public class StandardCheckerGameTest {
 		assertTrue(game.getEndTime() > 0);
 	}
 
-	private void print(PieceState e) {
-		System.out.println(rules.toColourName(e.getColour()) + ":" + e.getNumber() + ", pos=" + e.getPosition()
+	private void print(PieceState e, CheckerGame game) {
+		System.out.println(game.getRules().toColourName(e.getColour()) + ":" + e.getNumber() + ", pos=" + e.getPosition()
 				+ ", kinged=" + e.isKinged());
 	}
 
-	private List<PieceState> makeMove(int pieceColour) {
+	private List<PieceState> makeMove(int pieceColour, CheckerGame game) {
 		while (true) {
-			int pieceNumber = rand.nextInt(12) + 1;
+			int pieceNumber = rand.nextInt(game.getRules().getNumberOfPieces()) + 1;
 
-			for (int i = 0; i < 63; i++) {
+			for (int i = 0; i < game.getRules().getBoardHeight() * game.getRules().getBoardWidth() - 1; i++) {
 				try {
 					return game.move(pieceColour, pieceNumber, i);
 				} catch (Exception expected) {

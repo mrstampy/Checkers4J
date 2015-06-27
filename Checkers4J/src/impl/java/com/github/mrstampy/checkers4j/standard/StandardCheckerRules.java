@@ -35,17 +35,11 @@ import com.github.mrstampy.checkers4j.api.CheckerRules;
 public class StandardCheckerRules implements CheckerRules {
 	private static final long serialVersionUID = 9186550493157881658L;
 
-	/** The Constant WHITE_KING_LIMIT. */
-	public static final int WHITE_KING_LIMIT = 56;
+	/** The Constant STD_WIDTH. */
+	public static final int STD_WIDTH = 8;
 
-	/** The Constant BLACK_KING_LIMIT. */
-	public static final int BLACK_KING_LIMIT = 8;
-
-	/** The Constant BOARD_WIDTH. */
-	public static final int BOARD_WIDTH = 8;
-
-	/** The Constant BOARD_HEIGHT. */
-	public static final int BOARD_HEIGHT = 8;
+	/** The Constant STD_HEIGHT. */
+	public static final int STD_HEIGHT = 8;
 
 	/** The Constant WHITE_NUM. */
 	public static final int WHITE_NUM = 0;
@@ -59,10 +53,34 @@ public class StandardCheckerRules implements CheckerRules {
 	/** The Constant BLACK. */
 	public static final String BLACK = "BLACK";
 
-	/** The number of pieces per colour. */
-	public static final int NUM_PIECES = 12;
-
 	private static final int[] VALID_COLOURS = { WHITE_NUM, BLACK_NUM };
+
+	private int boardWidth;
+	private int boardHeight;
+	private int numberOfPieces;
+
+	/**
+	 * Creates rules for a standard 8x8 checkerboard.
+	 */
+	public StandardCheckerRules() {
+		this(STD_WIDTH, STD_HEIGHT);
+	}
+
+	/**
+	 * Creates rules for a checkerboard of the specified dimensions. Board width
+	 * and height must be > 2 and must be even numbers. The final board will have
+	 * pieces on all but the opponent-facing row.
+	 *
+	 * @param boardWidth
+	 *          the board width
+	 * @param boardHeight
+	 *          the board height
+	 */
+	public StandardCheckerRules(int boardWidth, int boardHeight) {
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
+		calculateNumberOfPieces();
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -70,44 +88,13 @@ public class StandardCheckerRules implements CheckerRules {
 	 * @see com.github.mrstampy.checkers4j.api.CheckerRules#isValidPosition(int)
 	 */
 	public boolean isValidPosition(int position) {
-		switch (position) {
-		case -1: // jumped
-		case 1:
-		case 3:
-		case 5:
-		case 7:
-		case 8:
-		case 10:
-		case 12:
-		case 14:
-		case 17:
-		case 19:
-		case 21:
-		case 23:
-		case 24:
-		case 26:
-		case 28:
-		case 30:
-		case 33:
-		case 35:
-		case 37:
-		case 39:
-		case 40:
-		case 42:
-		case 44:
-		case 46:
-		case 49:
-		case 51:
-		case 53:
-		case 55:
-		case 56:
-		case 58:
-		case 60:
-		case 62:
-			return true;
-		}
+		if (position == -1) return true;
+		if (position < 0 || position >= getBoardWidth() * getBoardHeight()) return false;
 
-		return false;
+		boolean evenRow = isEven(getY(position));
+		boolean evenPos = isEven(position);
+
+		return evenRow ? !evenPos : evenPos;
 	}
 
 	/*
@@ -167,11 +154,31 @@ public class StandardCheckerRules implements CheckerRules {
 	 * com.github.mrstampy.checkers4j.api.CheckerRules#isValidPieceNumber(int)
 	 */
 	public boolean isValidPieceNumber(int pieceNumber) {
-		if (pieceNumber < 1 || pieceNumber > 12) {
-			throw new IllegalArgumentException(getIllegalNumberMsg(pieceNumber));
-		}
+		return pieceNumber > 0 && pieceNumber <= getNumberOfPieces();
+	}
 
-		return true;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.api.CheckerRules#getX(int)
+	 */
+	@Override
+	public int getX(int position) {
+		assert isValidPosition(position);
+
+		int y = getY(position);
+
+		return position - (y * getBoardHeight());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.api.CheckerRules#getY(int)
+	 */
+	@Override
+	public int getY(int position) {
+		return position / getBoardHeight();
 	}
 
 	/*
@@ -181,14 +188,47 @@ public class StandardCheckerRules implements CheckerRules {
 	 * int)
 	 */
 	public int getStartPosition(int pieceColour, int pieceNumber) {
-		switch (pieceColour) {
-		case WHITE_NUM:
-			return getWhiteStartPosition(pieceNumber);
-		case BLACK_NUM:
-			return getBlackStartPosition(pieceNumber);
+		assert isValidPieceColour(pieceColour);
+		assert isValidPieceNumber(pieceNumber);
+
+		int ppr = getPiecesPerRow();
+		int rows = getRows();
+
+		int factor = pieceColour == WHITE_NUM ? 0 : getBoardHeight() / 2 + 1;
+
+		int row = -1;
+		for (int i = 0; i < rows; i++) {
+			if ((i + 1) * ppr >= pieceNumber) {
+				row = i + factor;
+				break;
+			}
 		}
 
-		throw new IllegalArgumentException(getIllegalColourMsg(pieceColour));
+		int idx = -1;
+		for (int i = 0; i < ppr; i++) {
+			if (((row - factor) * ppr) + i + 1 == pieceNumber) {
+				idx = i;
+				break;
+			}
+		}
+
+		return convertToPosition(row, idx);
+	}
+
+	/**
+	 * Convert to position.
+	 *
+	 * @param row
+	 *          the row
+	 * @param idx
+	 *          the idx
+	 * @return the int
+	 */
+	protected int convertToPosition(int row, int idx) {
+		int rowPos = row * getBoardWidth();
+		int factor = isEven(row) ? 1 : 0;
+
+		return rowPos + (idx * 2) + factor;
 	}
 
 	/*
@@ -226,7 +266,7 @@ public class StandardCheckerRules implements CheckerRules {
 	 */
 	@Override
 	public int getBoardWidth() {
-		return BOARD_WIDTH;
+		return boardWidth;
 	}
 
 	/*
@@ -236,7 +276,7 @@ public class StandardCheckerRules implements CheckerRules {
 	 */
 	@Override
 	public int getBoardHeight() {
-		return BOARD_HEIGHT;
+		return boardHeight;
 	}
 
 	/*
@@ -251,7 +291,28 @@ public class StandardCheckerRules implements CheckerRules {
 		if (piece.isKinged()) return false;
 
 		int pos = piece.getPosition();
-		return BLACK_NUM == piece.getColour() ? pos < BLACK_KING_LIMIT : pos >= WHITE_KING_LIMIT;
+		return BLACK_NUM == piece.getColour() ? pos < getBlackKingLimit() : pos >= getWhiteKingLimit();
+	}
+
+	/**
+	 * Gets the black king limit.
+	 *
+	 * @return the black king limit
+	 */
+	protected int getBlackKingLimit() {
+		return getBoardWidth();
+	}
+
+	/**
+	 * Gets the white king limit.
+	 *
+	 * @return the white king limit
+	 */
+	protected int getWhiteKingLimit() {
+		int width = getBoardWidth();
+		int height = getBoardHeight();
+
+		return width * height - width;
 	}
 
 	/*
@@ -261,77 +322,37 @@ public class StandardCheckerRules implements CheckerRules {
 	 */
 	@Override
 	public int getNumberOfPieces() {
-		return NUM_PIECES;
-	}
-
-	private int getWhiteStartPosition(int pieceNumber) {
-		switch (pieceNumber) {
-		case 1:
-			return 1;
-		case 2:
-			return 3;
-		case 3:
-			return 5;
-		case 4:
-			return 7;
-		case 5:
-			return 8;
-		case 6:
-			return 10;
-		case 7:
-			return 12;
-		case 8:
-			return 14;
-		case 9:
-			return 17;
-		case 10:
-			return 19;
-		case 11:
-			return 21;
-		case 12:
-			return 23;
-		}
-
-		throw new IllegalArgumentException(getIllegalNumberMsg(pieceNumber));
-	}
-
-	private int getBlackStartPosition(int pieceNumber) {
-		switch (pieceNumber) {
-		case 1:
-			return 40;
-		case 2:
-			return 42;
-		case 3:
-			return 44;
-		case 4:
-			return 46;
-		case 5:
-			return 49;
-		case 6:
-			return 51;
-		case 7:
-			return 53;
-		case 8:
-			return 55;
-		case 9:
-			return 56;
-		case 10:
-			return 58;
-		case 11:
-			return 60;
-		case 12:
-			return 62;
-		}
-
-		throw new IllegalArgumentException(getIllegalNumberMsg(pieceNumber));
-	}
-
-	private String getIllegalNumberMsg(int pieceNumber) {
-		return "Illegal piece number " + pieceNumber + ", must be one of 1 thru 12 inclusive";
+		return numberOfPieces;
 	}
 
 	private String getIllegalColourMsg(int pieceColour) {
 		return "Illegal piece colour " + pieceColour + " must be either 0 (WHITE) or 1 (BLACK)";
+	}
+
+	private void calculateNumberOfPieces() {
+		assert getBoardWidth() > 2 && isEven(getBoardWidth());
+		assert getBoardHeight() > 2 && isEven(getBoardHeight());
+
+		this.numberOfPieces = getPiecesPerRow() * getRows();
+	}
+
+	/**
+	 * Checks if is even.
+	 *
+	 * @param i
+	 *          the i
+	 * @return true, if is even
+	 */
+	protected boolean isEven(int i) {
+		return i % 2 == 0;
+	}
+
+	private int getPiecesPerRow() {
+		return getBoardWidth() / 2;
+	}
+
+	private int getRows() {
+		return (getBoardHeight() - 2) / 2;
 	}
 
 }

@@ -42,6 +42,23 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 
 	private CheckerBoard board;
 
+	/**
+	 * Creates a standard checker game for a standard 8x8 checkerboard.
+	 */
+	public StandardCheckerGame() {
+		initialize(new StandardCheckerRules());
+	}
+
+	/**
+	 * Creates a standard checker game using the specified {@link CheckerRules}.
+	 *
+	 * @param checkerRules
+	 *          the checker rules
+	 */
+	public StandardCheckerGame(CheckerRules checkerRules) {
+		initialize(checkerRules);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -93,9 +110,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	protected void setStateImpl(List<Piece> state) {
 		board.resetBoard();
 
-		for (Piece piece : state) {
-			addPieceToBoard(piece);
-		}
+		state.forEach(p -> addPieceToBoard(p));
 	}
 
 	/*
@@ -128,11 +143,11 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	 */
 	@Override
 	protected void moveImpl(Piece piece, int toPosition) throws CheckersStateException {
-		int y = getY(piece.getPosition());
-		int x = getX(piece.getPosition(), y);
+		int y = getRules().getY(piece.getPosition());
+		int x = getRules().getX(piece.getPosition());
 
-		int toY = getY(toPosition);
-		int toX = getX(toPosition, toY);
+		int toY = getRules().getY(toPosition);
+		int toX = getRules().getX(toPosition);
 
 		Piece toPiece = board.getBoardPiece(toX, toY);
 		if (toPiece != null) {
@@ -154,8 +169,8 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	private void addPieceToBoard(Piece piece) {
 		if (piece.isJumped()) return;
 
-		int y = getY(piece.getPosition());
-		int x = getX(piece.getPosition(), y);
+		int y = getRules().getY(piece.getPosition());
+		int x = getRules().getX(piece.getPosition());
 
 		board.setBoardPiece(piece, x, y);
 	}
@@ -209,21 +224,9 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	}
 
 	private boolean canMove(Piece piece, boolean forward) {
-		int y = getY(piece.getPosition());
-		int x = getX(piece.getPosition(), y);
+		int y = getRules().getY(piece.getPosition());
+		int x = getRules().getX(piece.getPosition());
 
 		return board.canMoveOrJump(forward, x, y);
-	}
-
-	private int getY(int position) {
-		assert getRules().isValidPosition(position);
-
-		return position / getRules().getBoardHeight();
-	}
-
-	private int getX(int position, int y) {
-		assert getRules().isValidPosition(position);
-
-		return position - (y * getRules().getBoardHeight());
 	}
 }
