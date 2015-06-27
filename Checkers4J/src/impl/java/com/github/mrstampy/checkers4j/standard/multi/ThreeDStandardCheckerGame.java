@@ -76,7 +76,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 *          the board height
 	 */
 	public ThreeDStandardCheckerGame(int boardWidth, int boardHeight) {
-		this(new ThreeDStandardCheckerRules(boardWidth, boardHeight, 2));
+		this(new ThreeDStandardCheckerRules(2, boardWidth, boardHeight));
 	}
 
 	/**
