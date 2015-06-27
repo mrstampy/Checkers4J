@@ -152,8 +152,14 @@ public class Piece extends PieceState {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return getColourName() + "-" + getNumber() + (isJumped() ? " jumped" : " at position " + getPosition());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Piece ? super.equals(o) : false;
 	}
 
 }
