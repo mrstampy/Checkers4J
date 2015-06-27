@@ -118,7 +118,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	private List<Piece> createPieces(int pieceColour, CheckerRules rules) {
 		List<Piece> pieces = new ArrayList<>();
 
-		int pno = rules.getPieceNumberOffset() + 1;
+		int pno = 1 + rules.getPieceNumberOffset() * rules.getNumberOfPieces();
 		AtomicInteger ai = new AtomicInteger(1);
 		for (int i = pno; i - pno < rules.getNumberOfPieces(); i++) {
 			pieces.add(new Piece(rules, pieceColour, i, ai.getAndIncrement()));
