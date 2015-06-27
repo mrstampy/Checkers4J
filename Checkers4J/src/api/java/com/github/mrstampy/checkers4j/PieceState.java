@@ -43,8 +43,6 @@ public class PieceState implements Serializable {
 
 	private int position;
 
-	private int id;
-
 	/**
 	 * Returns true if this piece is kinged.
 	 *
@@ -124,25 +122,6 @@ public class PieceState implements Serializable {
 		this.position = position;
 	}
 
-	/**
-	 * Returns a unique id for this piece. Ids must be unique across games.
-	 *
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * Sets the unique id for this piece.
-	 *
-	 * @param id
-	 *          the new id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -154,7 +133,7 @@ public class PieceState implements Serializable {
 
 		PieceState ps = (PieceState) o;
 
-		return ps.getId() == getId() && ps.getColour() == getColour() && ps.getNumber() == getNumber();
+		return ps.getColour() == getColour() && ps.getNumber() == getNumber();
 	}
 
 	/*
@@ -164,7 +143,7 @@ public class PieceState implements Serializable {
 	 */
 	@Override
 	public int hashCode() {
-		return 17 * getId() + 21 * getColour() + 23 * getNumber();
+		return 21 * getColour() + 23 * getNumber();
 	}
 
 }

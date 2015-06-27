@@ -355,4 +355,14 @@ public class StandardCheckerRules implements CheckerRules {
 		return (getBoardHeight() - 2) / 2;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.api.CheckerRules#getPieceNumberOffset()
+	 */
+	@Override
+	public int getPieceNumberOffset() {
+		return 0;
+	}
+
 }

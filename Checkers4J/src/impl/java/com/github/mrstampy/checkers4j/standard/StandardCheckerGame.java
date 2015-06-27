@@ -58,7 +58,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	 * Creates a standard checker game for a standard 8x8 checkerboard.
 	 */
 	public StandardCheckerGame() {
-		initialize(new StandardCheckerRules());
+		this(new StandardCheckerRules());
 	}
 
 	/**
@@ -158,6 +158,15 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 		return getRules().getBoardHeight() * y + x;
 	}
 
+	/**
+	 * Exposed, use sparingly.
+	 *
+	 * @return the board
+	 */
+	public CheckerBoard getBoard() {
+		return board;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -234,7 +243,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 
 	private void evaluateMoveTo(Piece piece, int toPosition, int toY, int toX) throws CheckersStateException {
 		Piece toPiece = board.getBoardPiece(toX, toY);
-		
+
 		if (toPiece == null) return;
 
 		throw new CheckersStateException(piece.getColour(), piece.getNumber(), toPosition, ErrorState.ILLEGAL_MOVE,

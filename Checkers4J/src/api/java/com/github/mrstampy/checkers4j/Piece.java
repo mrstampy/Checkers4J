@@ -18,8 +18,6 @@
  */
 package com.github.mrstampy.checkers4j;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.github.mrstampy.checkers4j.api.CheckerRules;
 
 // TODO: Auto-generated Javadoc
@@ -29,8 +27,6 @@ import com.github.mrstampy.checkers4j.api.CheckerRules;
 public class Piece extends PieceState {
 
 	private static final long serialVersionUID = 8571918472139040675L;
-
-	private static AtomicInteger ID = new AtomicInteger();
 
 	private CheckerRules rules;
 
@@ -50,7 +46,6 @@ public class Piece extends PieceState {
 		setNumber(number);
 
 		setPosition(rules.getStartPosition(colour, number));
-		setId(ID.incrementAndGet());
 	}
 
 	/**
@@ -157,6 +152,11 @@ public class Piece extends PieceState {
 		return getColourName() + "-" + getNumber() + (isJumped() ? " jumped" : " at position " + getPosition());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.PieceState#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o) {
 		return o instanceof Piece ? super.equals(o) : false;

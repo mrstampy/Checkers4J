@@ -117,7 +117,8 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	private List<Piece> createPieces(int pieceColour, CheckerRules rules) {
 		List<Piece> pieces = new ArrayList<>();
 
-		for (int i = 1; i <= rules.getNumberOfPieces(); i++) {
+		int pno = rules.getPieceNumberOffset() + 1;
+		for (int i = pno; i - pno <= rules.getNumberOfPieces(); i++) {
 			pieces.add(new Piece(rules, pieceColour, i));
 		}
 
@@ -240,14 +241,27 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	 */
 	protected abstract void moveImpl(Piece piece, int toPosition) throws CheckersStateException;
 
-	private void endOfGameCheck(Piece piece) {
+	/**
+	 * End of game check.
+	 *
+	 * @param piece
+	 *          the piece
+	 */
+	protected void endOfGameCheck(Piece piece) {
 		if (otherColoursInPlay(piece.getColour())) return;
 
 		setWinningColour(piece.getColour());
 		setGameStateInternal(GameState.FINISHED);
 	}
 
-	private boolean otherColoursInPlay(int pieceColour) {
+	/**
+	 * Other colours in play.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
+	 * @return true, if successful
+	 */
+	protected boolean otherColoursInPlay(int pieceColour) {
 		boolean others = false;
 
 		for (Entry<Integer, List<Piece>> entry : byColour.entrySet()) {
@@ -259,7 +273,14 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 		return others;
 	}
 
-	private boolean playing(List<Piece> value) {
+	/**
+	 * Playing.
+	 *
+	 * @param value
+	 *          the value
+	 * @return true, if successful
+	 */
+	public static boolean playing(List<Piece> value) {
 		for (Piece piece : value) {
 			if (!piece.isJumped()) return true;
 		}

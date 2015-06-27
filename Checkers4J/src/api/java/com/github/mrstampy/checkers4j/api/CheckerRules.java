@@ -153,4 +153,11 @@ public interface CheckerRules extends Serializable {
 	 * @return the y
 	 */
 	int getY(int position);
+
+	/**
+	 * Gets the piece number offset.
+	 *
+	 * @return the piece number offset
+	 */
+	int getPieceNumberOffset();
 }
