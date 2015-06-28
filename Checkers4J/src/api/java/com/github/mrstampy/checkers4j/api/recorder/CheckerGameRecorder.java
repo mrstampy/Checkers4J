@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Convenience class to record moves.
  * 
- * @see RecordableCheckerGame
+ * @see Recordable
  */
 public class CheckerGameRecorder implements Serializable {
 

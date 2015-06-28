@@ -18,14 +18,23 @@
  */
 package com.github.mrstampy.checkers4j.api.recorder;
 
-import com.github.mrstampy.checkers4j.api.CheckerGame;
+import java.io.Serializable;
+import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
- * Defines the interface for games which record moves.
- *
- * @author burton
+ * Interface for objects which record {@link Move}s.
+ * 
  * @see CheckerGameRecorder
  */
-public interface RecordableCheckerGame extends CheckerGame, Recordable {
+public interface Recordable extends Serializable {
+
+	/**
+	 * All moves made are recorded and are returned via this method.
+	 *
+	 * @return the moves
+	 * @see CheckerGameRecorder
+	 */
+	List<Move> getMoves();
+
 }
