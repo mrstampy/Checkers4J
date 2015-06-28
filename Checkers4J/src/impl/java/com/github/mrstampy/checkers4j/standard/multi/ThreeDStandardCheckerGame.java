@@ -43,8 +43,8 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
  * The pieces created have a unique piece number in the context of each 3D game.
  * State is given in terms of absolute position, defined as a sequential integer
  * starting at zero and increasing left to right, top to bottom, up to down ie:
- * the first boards first position is 0, the second boards first position is 64,
- * the third boards first position is 128 etc.<br>
+ * the first board's first position is 0, the second board's first position is
+ * 64, the third board's first position is 128 etc.<br>
  * <br>
  * Standard checker rules apply for movement on a single board. To facilitate
  * movement across boards here are the rules I made up:<br>
@@ -53,10 +53,11 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
  * 2. Movement across boards mimics movement on a board, where a single move can
  * occur when the space at (abs(deltaX, deltaY, deltaZ) = 1) is unoccupied and a
  * jump can occur when (abs(deltaX, deltaY, deltaZ) = 1) is occupied, of the
- * other colour and (abs(deltaX, deltaY, deltaZ) = 2) is unoccupied.<br>
+ * other colour and (abs(deltaX, deltaY, deltaZ) = 2) is unoccupied in the same
+ * diagonal direction.<br>
  * 3. Uncrowned pieces are limited to their y direction (white forward, black
  * reverse).<br>
- * 4. Kings can move in all valid directions.
+ * 4. Kings can move in all valid directions and can be crowned on any board.
  */
 public class ThreeDStandardCheckerGame implements CheckerGame {
 
@@ -203,11 +204,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 
 		int boardIdx = getBoardIndexByNum(pieceNumber);
 
-		Piece piece = getPiece(pieceColour, pieceNumber, boardIdx);
-		if (piece == null) {
-			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_STATE, "Piece "
-					+ getRules().toColourName(pieceColour) + "-" + pieceNumber + " not found on board index " + boardIdx);
-		}
+		Piece piece = checkPiece(pieceColour, pieceNumber, toPosition, boardIdx);
 
 		boolean jumped = false;
 		if (boardIdx == toBoardIdx) {
@@ -225,6 +222,23 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		endOfGameCheck(piece);
 
 		return getState();
+	}
+
+	private Piece checkPiece(int pieceColour, int pieceNumber, int toPosition, int boardIdx)
+			throws CheckersStateException {
+		Piece piece = getPiece(pieceColour, pieceNumber, boardIdx);
+
+		if (piece == null) {
+			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_STATE, "Piece "
+					+ getRules().toColourName(pieceColour) + "-" + pieceNumber + " not found on board index " + boardIdx);
+		}
+
+		if (!piece.directionCheck(toPosition)) {
+			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_MOVE, "Cannot move "
+					+ piece + " to " + toPosition);
+		}
+
+		return piece;
 	}
 
 	private boolean endingTurn(boolean jumped, Piece piece) {
@@ -652,6 +666,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * manipulation. Use sparingly, or not at all.
 	 *
 	 * @return the state by board
+	 * @see #getStateByBoard()
 	 */
 	public Map<Integer, List<Piece>> getFullStateByBoard() {
 		Map<Integer, List<Piece>> map = new HashMap<>();
