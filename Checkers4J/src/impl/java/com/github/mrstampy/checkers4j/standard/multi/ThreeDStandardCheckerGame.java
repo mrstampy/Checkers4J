@@ -810,9 +810,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 */
 	@Override
 	public boolean canMove(int pieceColour) {
-		for (StandardCheckerGame scg : boards) {
-			if (scg.canMove(pieceColour)) return true;
-		}
+		if (boards.stream().filter(scg -> scg.canMove(pieceColour)).findAny().isPresent()) return true;
 
 		return canMoveAcrossBoards(pieceColour);
 	}
