@@ -19,6 +19,7 @@
 package com.github.mrstampy.checkers4j.standard.multi;
 
 import static com.github.mrstampy.checkers4j.standard.CheckerBoard.splitDiff;
+import static com.github.mrstampy.checkers4j.standard.StandardCheckerRules.WHITE_NUM;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,14 +39,31 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class MultiDimensionStandardCheckerGame.
+ * This class is a state engine for 3D checkers using standard checker rules.
+ * The pieces created have a unique piece number in the context of each 3D game.
+ * State is given in terms of absolute position, defined as a sequential integer
+ * starting at zero and increasing left to right, top to bottom, up to down ie:
+ * the first boards first position is 0, the second boards first position is 64,
+ * the third boards first position is 128 etc.<br>
+ * <br>
+ * Standard checker rules apply for movement on a single board. To facilitate
+ * movement across boards here are the rules I made up:<br>
+ * <br>
+ * 1. All pieces can move across boards in either z direction.<br>
+ * 2. Movement across boards mimics movement on a board, where a single move can
+ * occur when the space at (abs(deltaX, deltaY, deltaZ) = 1) is unoccupied and a
+ * jump can occur when (abs(deltaX, deltaY, deltaZ) = 1) is occupied, of the
+ * other colour and (abs(deltaX, deltaY, deltaZ) = 2) is unoccupied.<br>
+ * 3. Uncrowned pieces are limited to their y direction (white forward, black
+ * reverse).<br>
+ * 4. Kings can move in all valid directions.
  */
 public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	private static final long serialVersionUID = 6556554049093188540L;
 
 	/** The Constant GAME_NAME. */
-	public static final String GAME_NAME = "Multi Dimensional Standard Checkers";
+	public static final String GAME_NAME = "Three D Standard Checkers";
 
 	private ThreeDStandardCheckerRules rules;
 	private List<StandardCheckerGame> boards = new ArrayList<>();
@@ -61,14 +79,15 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	private long startTime;
 
 	/**
-	 * Instantiates a new multi dimension standard checker game.
+	 * Instantiates a new threeD standard checker game with two boards.
 	 */
 	public ThreeDStandardCheckerGame() {
 		this(new ThreeDStandardCheckerRules(2));
 	}
 
 	/**
-	 * Instantiates a new multi dimension standard checker game.
+	 * Instantiates a new threeD standard checker game with two boards using the
+	 * specified dimensions.
 	 *
 	 * @param boardWidth
 	 *          the board width
@@ -80,7 +99,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	}
 
 	/**
-	 * Instantiates a new multi dimension standard checker game.
+	 * Instantiates a new threeD standard checker game with the specified number
+	 * of boards of standard dimensions (8x8).
 	 *
 	 * @param numBoards
 	 *          the num boards
@@ -90,7 +110,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	}
 
 	/**
-	 * Instantiates a new multi dimension standard checker game.
+	 * Instantiates a new threeD standard checker game.
 	 *
 	 * @param numBoards
 	 *          the num boards
@@ -104,7 +124,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	}
 
 	/**
-	 * Instantiates a new multi dimension standard checker game.
+	 * Instantiates a new threeD standard checker game.
 	 *
 	 * @param rules
 	 *          the rules
@@ -156,7 +176,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 */
 	@Override
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
-		assert rules.isValidPieceColour(pieceColour);
+		assert getRules().isValidPieceColour(pieceColour);
 		assert isValidPosition(toPosition);
 		assert isValidPieceNumber(pieceNumber);
 
@@ -176,19 +196,167 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 					+ getRules().toColourName(pieceColour) + "-" + pieceNumber + " not found on board index " + boardIdx);
 		}
 
+		boolean jumped = false;
 		if (boardIdx == toBoardIdx) {
 			boards.get(boardIdx).move(pieceColour, pieceNumber, getRelativePosition(toPosition, boardIdx));
 		} else {
-			moveAcrossBoards(pieceColour, pieceNumber, toPosition, boardIdx, toBoardIdx);
+			jumped = moveAcrossBoards(pieceColour, pieceNumber, toPosition, boardIdx, toBoardIdx);
 		}
 
 		lastBoardIdx = toBoardIdx;
 
-		if (rules.isKingable(piece)) piece.setKinged(true);
+		if (getRules().isKingable(piece)) piece.setKinged(true);
+
+		if (endingTurn(jumped, piece)) endTurn(pieceColour);
 
 		endOfGameCheck(piece);
 
 		return getState();
+	}
+
+	private boolean endingTurn(boolean jumped, Piece piece) {
+		return isAutoEndTurn() && (!jumped || !canJump(piece));
+	}
+
+	private boolean canJump(Piece piece) {
+		return piece.isKinged() ? canKingJump(piece) : canJump(piece, piece.getColour() == WHITE_NUM);
+	}
+
+	private boolean canKingJump(Piece piece) {
+		return canJump(piece, true) || canJump(piece, false);
+	}
+
+	private boolean canJump(Piece piece, boolean forward) {
+		int y = getRules().getY(piece.getPosition());
+		int x = getRules().getX(piece.getPosition());
+		int boardIdx = getBoardIndex(piece);
+
+		CheckerBoard board = boards.get(boardIdx).getBoard();
+
+		return board.canJump(forward, x, y) || canJumpAcrossBoards(piece, forward, x, y, boardIdx);
+	}
+
+	private boolean canJumpAcrossBoards(Piece piece, boolean forward, int x, int y, int boardIdx) {
+		return canJumpAcrossBoards(piece, forward, x, y, boardIdx, true)
+				|| canJumpAcrossBoards(piece, forward, x, y, boardIdx, false);
+	}
+
+	private boolean canJumpAcrossBoards(Piece piece, boolean forward, int x, int y, int boardIdx, boolean down) {
+		int jumpIdx = down ? boardIdx + 1 : boardIdx - 1;
+		int toIdx = down ? boardIdx + 2 : boardIdx - 2;
+
+		int jy = forward ? y + 1 : y - 1;
+		int ty = forward ? y + 2 : y - 2;
+
+		int c = piece.getColour();
+
+		if (isValidJump(x + 1, jy, x + 2, ty, jumpIdx, toIdx, c)) return true;
+		if (isValidJump(x - 1, jy, x - 2, ty, jumpIdx, toIdx, c)) return true;
+
+		return false;
+	}
+
+	private boolean isValidJump(int jx, int jy, int tx, int ty, int jIdx, int tIdx, int pieceColour) {
+		if (!(isValidX(jx) && isValidX(tx))) return false;
+		if (!(isValidY(jy) && isValidY(ty))) return false;
+		if (!(isValidZ(jIdx) && isValidZ(tIdx))) return false;
+
+		return hasPieceToJump(jx, jy, jIdx, pieceColour) && isEmptyAt(tx, ty, tIdx);
+	}
+
+	private boolean isValidZ(int z) {
+		return z >= 0 && z < getNumBoards();
+	}
+
+	private boolean isValidX(int x) {
+		return x >= 0 && x < getRules().getBoardWidth();
+	}
+
+	private boolean isValidY(int y) {
+		return y >= 0 && y < getRules().getBoardHeight();
+	}
+
+	private boolean isEmptyAt(int x, int y, int boardIdx) {
+		return getBoardPiece(x, y, boardIdx) == null;
+	}
+
+	private boolean hasPieceToJump(int x, int y, int boardIdx, int pieceColour) {
+		Piece p = getBoardPiece(x, y, boardIdx);
+
+		return p != null && p.getColour() != pieceColour;
+	}
+
+	private Piece getBoardPiece(int x, int y, int boardIdx) {
+		StandardCheckerGame scg = boards.get(boardIdx);
+
+		CheckerBoard board = scg.getBoard();
+
+		Piece p = board.getBoardPiece(x, y);
+		return p;
+	}
+
+	/**
+	 * Convenience method to move the specified piece to the x,y,z coordinates
+	 * specified.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
+	 * @param pieceNumber
+	 *          the piece number
+	 * @param toX
+	 *          the to x
+	 * @param toY
+	 *          the to y
+	 * @param toBoardIdx
+	 *          the to board idx
+	 * @return the list
+	 * @throws CheckersStateException
+	 *           the checkers state exception
+	 */
+	public List<PieceState> move(int pieceColour, int pieceNumber, int toX, int toY, int toBoardIdx)
+			throws CheckersStateException {
+		return move(pieceColour, pieceNumber, getAbsolutePosition(toX, toY, toBoardIdx));
+	}
+
+	/**
+	 * Convenience method to convert x,y,z coordinates to absolute position.
+	 *
+	 * @param x
+	 *          the x
+	 * @param y
+	 *          the y
+	 * @param z
+	 *          the z
+	 * @return the absolute position
+	 */
+	public int getAbsolutePosition(int x, int y, int z) {
+		assert isValidX(x);
+		assert isValidY(y);
+		assert isValidZ(z);
+
+		int w = getRules().getBoardWidth();
+		int h = getRules().getBoardHeight();
+
+		return z * w * h + y * w + x;
+	}
+
+	/**
+	 * Returns the x,y,z coordinates specified by the absolute position.
+	 *
+	 * @param absolutePosition
+	 *          the absolute position
+	 * @return the coordinates
+	 */
+	public Coordinates getCoordinates(int absolutePosition) {
+		assert isValidPosition(absolutePosition);
+
+		int z = getBoardIndex(absolutePosition);
+
+		int relativePosition = getRelativePosition(absolutePosition, z);
+		int x = getRules().getX(relativePosition);
+		int y = getRules().getY(relativePosition);
+
+		return new Coordinates(x, y, z, absolutePosition);
 	}
 
 	private void endOfGameCheck(Piece piece) {
@@ -212,7 +380,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return p.getColour() == colour ? false : canMove(p);
 	}
 
-	private void moveAcrossBoards(int pieceColour, int pieceNumber, int toPosition, int boardIdx, int toBoardIdx)
+	// returns whether or not a jump was performed
+	private boolean moveAcrossBoards(int pieceColour, int pieceNumber, int toPosition, int boardIdx, int toBoardIdx)
 			throws CheckersStateException {
 		int diff = Math.abs(boardIdx - toBoardIdx);
 		if (diff > 2) {
@@ -225,11 +394,13 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		switch (diff) {
 		case 1:
 			moveBoards(piece, boardIdx, toBoardIdx, getRelativePosition(toPosition, toBoardIdx));
-			break;
+			return false;
 		case 2:
 			jumpBoards(piece, boardIdx, toBoardIdx, getRelativePosition(toPosition, toBoardIdx));
 			break;
 		}
+
+		return true;
 	}
 
 	private void jumpBoards(Piece piece, int boardIdx, int toBoardIdx, int relativePosition)
@@ -312,11 +483,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	}
 
 	private boolean isValidPieceNumber(int pieceNumber) {
-		return pieceNumber >= 0 && pieceNumber < getNumBoards() * rules.getNumberOfPieces();
+		return pieceNumber >= 0 && pieceNumber < getNumBoards() * getRules().getNumberOfPieces();
 	}
 
 	private boolean isValidPosition(int toPosition) {
-		return toPosition >= 0 && toPosition < getNumBoards() * rules.getBoardWidth() * rules.getBoardHeight();
+		return toPosition >= 0 && toPosition < getZFactor(getNumBoards());
 	}
 
 	/**
@@ -330,7 +501,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		assert absolutePosition >= 0;
 
 		int boardIdx = absolutePosition / getNumBoards();
-		assert boardIdx < getNumBoards();
+		assert isValidY(boardIdx);
 
 		return boardIdx;
 	}
@@ -355,10 +526,12 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return boards.get(0).hasTurn();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns the state of the game for the specified colour. Piece positions are
+	 * absolute.
 	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getState(int)
+	 * @param pieceColour
+	 * @return
 	 */
 	@Override
 	public List<PieceState> getState(int pieceColour) {
@@ -371,10 +544,10 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return toAbsolutePositions(forBoards);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns the state of the game. Piece positions are absolute.
 	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getState()
+	 * @return
 	 */
 	@Override
 	public List<PieceState> getState() {
@@ -402,21 +575,26 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	}
 
 	private int getAbsolutePosition(PieceState p, int boardIdx) {
-		return p.getPosition() + (boardIdx * getRules().getBoardWidth() * getRules().getBoardHeight());
+		return p.getPosition() + getZFactor(boardIdx);
 	}
 
 	private int getRelativePosition(int absolutePosition, int boardIdx) {
-		return absolutePosition - (boardIdx * getRules().getBoardWidth() * getRules().getBoardHeight());
+		return absolutePosition - getZFactor(boardIdx);
 	}
 
-	/*
-	 * (non-Javadoc)
+	private int getZFactor(int boardIdx) {
+		return boardIdx * getRules().getBoardWidth() * getRules().getBoardHeight();
+	}
+
+	/**
+	 * Sets the state for the game. Piece positions must be absolute.
 	 * 
-	 * @see
-	 * com.github.mrstampy.checkers4j.api.CheckerGame#setState(java.util.List)
+	 * @param state
 	 */
 	@Override
 	public void setState(List<Piece> state) {
+		assert state != null && state.size() == getRules().getNumberOfPieces() * getNumBoards();
+		
 		Map<Integer, List<Piece>> forBoards = createForBoards(state);
 		for (int i = 0; i < getNumBoards(); i++) {
 			boards.get(i).setState(forBoards.get(i));
@@ -424,7 +602,45 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	}
 
 	/**
-	 * Gets the state by board.
+	 * Sets the state for the game. Piece positions must be relative to the board.
+	 * 
+	 * @param state
+	 */
+	public void setState(Map<Integer, List<Piece>> state) {
+		assert state != null && state.size() == getNumBoards();
+
+		for (int i = 0; i < getNumBoards(); i++) {
+			boards.get(i).setState(state.get(i));
+		}
+	}
+
+	/**
+	 * Gets the full state by board. Positions of pieces are relative to each
+	 * board. Absolute position can be calculated by multiplying the board number
+	 * (map key, z value) by the width and height of the boards and adding this
+	 * value to the relative position.<br>
+	 * <br>
+	 * 
+	 * This method exposes the pieces in play for direct inspection and
+	 * manipulation. Use sparingly, or not at all.
+	 *
+	 * @return the state by board
+	 */
+	public Map<Integer, List<Piece>> getFullStateByBoard() {
+		Map<Integer, List<Piece>> map = new HashMap<>();
+
+		for (int i = 0; i < getNumBoards(); i++) {
+			map.put(i, boards.get(i).getFullState());
+		}
+
+		return map;
+	}
+
+	/**
+	 * Gets the state by board. Positions of pieces are relative to each board.
+	 * Absolute position can be calculated by multiplying the board number (map
+	 * key, z value) by the width and height of the boards and adding this value
+	 * to the relative position.
 	 *
 	 * @return the state by board
 	 */
@@ -432,13 +648,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		Map<Integer, List<PieceState>> map = new HashMap<>();
 
 		for (int i = 0; i < getNumBoards(); i++) {
-			int idx = i;
-
-			StandardCheckerGame scg = boards.get(i);
-			List<PieceState> l = scg.getState();
-			l.stream().forEach(p -> p.setPosition(getAbsolutePosition(p, idx)));
-
-			map.put(i, l);
+			map.put(i, boards.get(i).getState());
 		}
 
 		return map;
@@ -455,6 +665,10 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	private void addForBoards(Piece p, Map<Integer, List<Piece>> forBoards, int numPieces) {
 		int boardIdx = getBoardIndex(p.getPosition());
+		
+		int relativePosition = getRelativePosition(p.getPosition(), boardIdx);
+		
+		p.setPosition(relativePosition);
 
 		List<Piece> list = forBoards.get(boardIdx);
 		if (list == null) {
@@ -609,8 +823,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		int plus = boardIdx + factor;
 		int minus = boardIdx - factor;
 
-		int x = rules.getX(piece.getPosition());
-		int y = rules.getY(piece.getPosition()) + (forward ? factor : -factor);
+		int x = getRules().getX(piece.getPosition());
+		int y = getRules().getY(piece.getPosition()) + (forward ? factor : -factor);
 
 		boolean plusMt = false;
 		boolean minusMt = false;
@@ -777,6 +991,71 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		this.endTime = endTime;
 
 		boards.forEach(scg -> scg.setEndTime(endTime));
+	}
+
+	/**
+	 * The class Coordinates encapsulates the x,y,z coordinates specified by the
+	 * absolute position.
+	 */
+	public static class Coordinates {
+
+		/** The absolute position. */
+		int x, y, z, absolutePosition;
+
+		/**
+		 * Instantiates a new coordinates.
+		 *
+		 * @param x
+		 *          the x
+		 * @param y
+		 *          the y
+		 * @param z
+		 *          the z
+		 * @param absolutePosition
+		 *          the absolute position
+		 */
+		public Coordinates(int x, int y, int z, int absolutePosition) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.absolutePosition = absolutePosition;
+		}
+
+		/**
+		 * Gets the x.
+		 *
+		 * @return the x
+		 */
+		public int getX() {
+			return x;
+		}
+
+		/**
+		 * Gets the y.
+		 *
+		 * @return the y
+		 */
+		public int getY() {
+			return y;
+		}
+
+		/**
+		 * Gets the z.
+		 *
+		 * @return the z
+		 */
+		public int getZ() {
+			return z;
+		}
+
+		/**
+		 * Gets the absolute position.
+		 *
+		 * @return the absolute position
+		 */
+		public int getAbsolutePosition() {
+			return absolutePosition;
+		}
 	}
 
 }
