@@ -153,6 +153,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 */
 	@Override
 	public void initialize(ThreeDStandardCheckerRules rules) {
+		boards.clear();
+		
 		int nb = getNumBoards();
 
 		for (int i = 0; i < nb; i++) {
