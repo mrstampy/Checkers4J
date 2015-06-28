@@ -42,7 +42,7 @@ public class Piece extends PieceState {
 	 * @param number
 	 *          the number, sequential starting at 1, unique to a game
 	 * @param order
-	 *          the order, sequential starting at 1, unique to a board
+	 *          the order, sequential starting at 1, unique to a board and colour
 	 */
 	public Piece(CheckerRules rules, int colour, int number, int order) {
 		setRules(rules);
