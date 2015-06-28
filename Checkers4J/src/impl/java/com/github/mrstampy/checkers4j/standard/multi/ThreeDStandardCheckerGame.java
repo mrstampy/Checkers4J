@@ -144,6 +144,12 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * com.github.mrstampy.checkers4j.api.CheckerGame#initialize(com.github.mrstampy
 	 * .checkers4j.api.CheckerRules)
 	 */
+	/**
+	 * Initialize.
+	 *
+	 * @param rules
+	 *          the rules
+	 */
 	@Override
 	public void initialize(CheckerRules rules) {
 		int nb = getNumBoards();
@@ -157,10 +163,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		setGameState(GameState.INITIALIZED);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#beginTurn(int)
+	/**
+	 * Begin turn.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
 	 */
 	@Override
 	public void beginTurn(int pieceColour) {
@@ -169,10 +176,18 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		boards.forEach(scg -> scg.beginTurn(pieceColour));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#move(int, int, int)
+	/**
+	 * Move.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
+	 * @param pieceNumber
+	 *          the piece number
+	 * @param toPosition
+	 *          the to position, must be absolute
+	 * @return the {@link #getState()}
+	 * @throws CheckersStateException
+	 *           the checkers state exception
 	 */
 	@Override
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
@@ -511,6 +526,12 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#endTurn(int)
 	 */
+	/**
+	 * End turn.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
+	 */
 	@Override
 	public void endTurn(int pieceColour) {
 		boards.forEach(scg -> scg.endTurn(pieceColour));
@@ -521,6 +542,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#hasTurn()
 	 */
+	/**
+	 * Checks for turn.
+	 *
+	 * @return the int
+	 */
 	@Override
 	public int hasTurn() {
 		return boards.get(0).hasTurn();
@@ -529,9 +555,10 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	/**
 	 * Returns the state of the game for the specified colour. Piece positions are
 	 * absolute.
-	 * 
+	 *
 	 * @param pieceColour
-	 * @return
+	 *          the piece colour
+	 * @return the state
 	 */
 	@Override
 	public List<PieceState> getState(int pieceColour) {
@@ -546,8 +573,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	/**
 	 * Returns the state of the game. Piece positions are absolute.
-	 * 
-	 * @return
+	 *
+	 * @return the state
 	 */
 	@Override
 	public List<PieceState> getState() {
@@ -588,13 +615,14 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	/**
 	 * Sets the state for the game. Piece positions must be absolute.
-	 * 
+	 *
 	 * @param state
+	 *          the new state
 	 */
 	@Override
 	public void setState(List<Piece> state) {
 		assert state != null && state.size() == getRules().getNumberOfPieces() * getNumBoards();
-		
+
 		Map<Integer, List<Piece>> forBoards = createForBoards(state);
 		for (int i = 0; i < getNumBoards(); i++) {
 			boards.get(i).setState(forBoards.get(i));
@@ -603,8 +631,9 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	/**
 	 * Sets the state for the game. Piece positions must be relative to the board.
-	 * 
+	 *
 	 * @param state
+	 *          the state
 	 */
 	public void setState(Map<Integer, List<Piece>> state) {
 		assert state != null && state.size() == getNumBoards();
@@ -665,9 +694,9 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	private void addForBoards(Piece p, Map<Integer, List<Piece>> forBoards, int numPieces) {
 		int boardIdx = getBoardIndex(p.getPosition());
-		
+
 		int relativePosition = getRelativePosition(p.getPosition(), boardIdx);
-		
+
 		p.setPosition(relativePosition);
 
 		List<Piece> list = forBoards.get(boardIdx);
@@ -683,6 +712,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getWinningColour()
+	 */
+	/**
+	 * Gets the winning colour.
+	 *
+	 * @return the winning colour
 	 */
 	@Override
 	public int getWinningColour() {
@@ -704,6 +738,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getStartTime()
 	 */
+	/**
+	 * Gets the start time.
+	 *
+	 * @return the start time
+	 */
 	@Override
 	public long getStartTime() {
 		return startTime;
@@ -713,6 +752,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getEndTime()
+	 */
+	/**
+	 * Gets the end time.
+	 *
+	 * @return the end time
 	 */
 	@Override
 	public long getEndTime() {
@@ -724,6 +768,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getGameState()
 	 */
+	/**
+	 * Gets the game state.
+	 *
+	 * @return the game state
+	 */
 	@Override
 	public GameState getGameState() {
 		return gameState;
@@ -733,6 +782,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getGameName()
+	 */
+	/**
+	 * Gets the game name.
+	 *
+	 * @return the game name
 	 */
 	@Override
 	public String getGameName() {
@@ -744,6 +798,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getNextPlayer()
 	 */
+	/**
+	 * Gets the next player.
+	 *
+	 * @return the next player
+	 */
 	@Override
 	public int getNextPlayer() {
 		return lastBoardIdx == -1 ? -1 : boards.get(lastBoardIdx).getNextPlayer();
@@ -754,6 +813,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getLastPlayer()
 	 */
+	/**
+	 * Gets the last player.
+	 *
+	 * @return the last player
+	 */
 	@Override
 	public int getLastPlayer() {
 		return lastBoardIdx == -1 ? -1 : boards.get(lastBoardIdx).getLastPlayer();
@@ -763,6 +827,13 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#canMove(int)
+	 */
+	/**
+	 * Can move.
+	 *
+	 * @param pieceColour
+	 *          the piece colour
+	 * @return true, if successful
 	 */
 	@Override
 	public boolean canMove(int pieceColour) {
@@ -788,6 +859,13 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * @see
 	 * com.github.mrstampy.checkers4j.api.CheckerGame#canMove(com.github.mrstampy
 	 * .checkers4j.Piece)
+	 */
+	/**
+	 * Can move.
+	 *
+	 * @param piece
+	 *          the piece
+	 * @return true, if successful
 	 */
 	@Override
 	public boolean canMove(Piece piece) {
@@ -873,6 +951,9 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#draw()
 	 */
+	/**
+	 * Draw.
+	 */
 	@Override
 	public void draw() {
 		boards.forEach(scg -> scg.draw());
@@ -883,6 +964,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#isDraw()
 	 */
+	/**
+	 * Checks if is draw.
+	 *
+	 * @return true, if is draw
+	 */
 	@Override
 	public boolean isDraw() {
 		return boards.get(0).isDraw();
@@ -892,6 +978,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getRules()
+	 */
+	/**
+	 * Gets the rules.
+	 *
+	 * @return the rules
 	 */
 	@Override
 	public CheckerRules getRules() {
@@ -912,6 +1003,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getGameId()
 	 */
+	/**
+	 * Gets the game id.
+	 *
+	 * @return the game id
+	 */
 	@Override
 	public long getGameId() {
 		return gameId;
@@ -931,6 +1027,11 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * (non-Javadoc)
 	 * 
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#isAutoEndTurn()
+	 */
+	/**
+	 * Checks if is auto end turn.
+	 *
+	 * @return true, if is auto end turn
 	 */
 	@Override
 	public boolean isAutoEndTurn() {

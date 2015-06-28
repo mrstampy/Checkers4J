@@ -373,7 +373,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	@Override
 	public void setState(List<Piece> state) {
 		assert state != null && state.size() == getRules().getNumberOfPieces();
-		
+
 		this.state = state;
 
 		byColour.clear();
