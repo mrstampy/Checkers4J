@@ -16,7 +16,7 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package com.github.mrstampy.checkers4j.recorder;
+package com.github.mrstampy.checkers4j.api.recorder;
 
 import java.io.Serializable;
 

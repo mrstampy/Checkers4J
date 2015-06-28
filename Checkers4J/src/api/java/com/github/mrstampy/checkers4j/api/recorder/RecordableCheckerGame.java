@@ -16,53 +16,27 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * 
  */
-package com.github.mrstampy.checkers4j.recorder;
+package com.github.mrstampy.checkers4j.api.recorder;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+
+import com.github.mrstampy.checkers4j.api.CheckerGame;
 
 // TODO: Auto-generated Javadoc
 /**
- * Convenience class to record moves.
- * 
- * @see RecordableCheckerGame
+ * Defines the interface for games which record moves.
+ *
+ * @author burton
+ * @see CheckerGameRecorder
  */
-public class CheckerGameRecorder implements Serializable {
-
-	private static final long serialVersionUID = -3178801099705113885L;
-
-	private List<Move> moves = new ArrayList<>();
+public interface RecordableCheckerGame extends CheckerGame {
 
 	/**
-	 * Adds the move.
-	 *
-	 * @param gameId
-	 *          the game id
-	 * @param pieceColour
-	 *          the piece colour
-	 * @param pieceNumber
-	 *          the piece number
-	 * @param toPosition
-	 *          the to position
-	 */
-	public void addMove(long gameId, int pieceColour, int pieceNumber, int toPosition) {
-		moves.add(new Move(gameId, pieceColour, pieceNumber, toPosition));
-	}
-
-	/**
-	 * Gets the moves.
+	 * All moves made against this game are recorded and are returned via this
+	 * method. For auditing and testing purposes.
 	 *
 	 * @return the moves
+	 * @see CheckerGameRecorder
 	 */
-	public List<Move> getMoves() {
-		return moves;
-	}
-
-	/**
-	 * Clear.
-	 */
-	public void clear() {
-		moves.clear();
-	}
+	List<Move> getMoves();
 }

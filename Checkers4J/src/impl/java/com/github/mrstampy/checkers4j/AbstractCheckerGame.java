@@ -28,11 +28,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
+import com.github.mrstampy.checkers4j.api.recorder.CheckerGameRecorder;
+import com.github.mrstampy.checkers4j.api.recorder.Move;
+import com.github.mrstampy.checkers4j.api.recorder.RecordableCheckerGame;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
-import com.github.mrstampy.checkers4j.recorder.CheckerGameRecorder;
-import com.github.mrstampy.checkers4j.recorder.Move;
-import com.github.mrstampy.checkers4j.recorder.RecordableCheckerGame;
 
 // TODO: Auto-generated Javadoc
 /**
