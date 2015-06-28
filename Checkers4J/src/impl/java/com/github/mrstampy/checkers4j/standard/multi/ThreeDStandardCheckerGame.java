@@ -21,6 +21,7 @@ package com.github.mrstampy.checkers4j.standard.multi;
 import static com.github.mrstampy.checkers4j.standard.CheckerBoard.splitDiff;
 import static com.github.mrstampy.checkers4j.standard.StandardCheckerRules.WHITE_NUM;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1037,8 +1038,10 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * The class Coordinates encapsulates the x,y,z coordinates specified by the
 	 * absolute position.
 	 */
-	public static class Coordinates {
+	public static class Coordinates implements Serializable {
 
+		private static final long serialVersionUID = -4879987415777690375L;
+		
 		/** The absolute position. */
 		int x, y, z, absolutePosition;
 
