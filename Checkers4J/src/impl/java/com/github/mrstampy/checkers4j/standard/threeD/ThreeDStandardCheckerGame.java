@@ -154,7 +154,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	@Override
 	public void initialize(ThreeDStandardCheckerRules rules) {
 		boards.clear();
-		
+
 		int nb = getNumBoards();
 
 		for (int i = 0; i < nb; i++) {
@@ -882,22 +882,28 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 		int x = getRules().getX(piece.getPosition());
 		int y = getRules().getY(piece.getPosition()) + (forward ? factor : -factor);
 
-		boolean plusMt = false;
-		boolean minusMt = false;
+		boolean plusMt = true;
+		boolean minusMt = true;
+
+		boolean plusOOB = false;
+		boolean minusOOB = false;
 
 		if (plus < getNumBoards()) {
 			plusMt = isEmpty(plus, x + factor, y) && isEmpty(plus, x - factor, y);
 		} else {
-			plusMt = true;
+			plusOOB = true;
 		}
 
 		if (minus >= 0) {
 			minusMt = isEmpty(minus, x + factor, y) && isEmpty(minus, x - factor, y);
 		} else {
-			minusMt = true;
+			minusOOB = true;
 		}
 
-		return !plusMt || !minusMt;
+		boolean plusMove = plusMt && !plusOOB;
+		boolean minusMove = minusMt && !minusOOB;
+		
+		return plusMove || minusMove;
 	}
 
 	private boolean isEmpty(int boardIdx, int x, int y) {
