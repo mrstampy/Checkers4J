@@ -721,11 +721,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		list.add(p);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getWinningColour()
-	 */
 	/**
 	 * Gets the winning colour.
 	 *
@@ -746,11 +741,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		boards.forEach(scg -> scg.setWinningColour(winningColour));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getStartTime()
-	 */
 	/**
 	 * Gets the start time.
 	 *
@@ -761,11 +751,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return startTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getEndTime()
-	 */
 	/**
 	 * Gets the end time.
 	 *
@@ -776,11 +761,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return endTime;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getGameState()
-	 */
 	/**
 	 * Gets the game state.
 	 *
@@ -791,11 +771,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return gameState;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getGameName()
-	 */
 	/**
 	 * Gets the game name.
 	 *
@@ -806,11 +781,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return GAME_NAME;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getNextPlayer()
-	 */
 	/**
 	 * Gets the next player.
 	 *
@@ -821,11 +791,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return lastBoardIdx == -1 ? -1 : boards.get(lastBoardIdx).getNextPlayer();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getLastPlayer()
-	 */
 	/**
 	 * Gets the last player.
 	 *
@@ -836,11 +801,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return lastBoardIdx == -1 ? -1 : boards.get(lastBoardIdx).getLastPlayer();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#canMove(int)
-	 */
 	/**
 	 * Can move.
 	 *
@@ -866,13 +826,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.github.mrstampy.checkers4j.api.CheckerGame#canMove(com.github.mrstampy
-	 * .checkers4j.Piece)
-	 */
 	/**
 	 * Can move.
 	 *
@@ -959,11 +912,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return idx;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#draw()
-	 */
 	/**
 	 * Draw.
 	 */
@@ -972,11 +920,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		boards.forEach(scg -> scg.draw());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#isDraw()
-	 */
 	/**
 	 * Checks if is draw.
 	 *
@@ -987,11 +930,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return boards.get(0).isDraw();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getRules()
-	 */
 	/**
 	 * Gets the rules.
 	 *
@@ -1011,11 +949,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		return rules.getNumBoards();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getGameId()
-	 */
 	/**
 	 * Gets the game id.
 	 *
@@ -1036,11 +969,6 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		this.gameId = gameId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#isAutoEndTurn()
-	 */
 	/**
 	 * Checks if is auto end turn.
 	 *
