@@ -30,10 +30,8 @@ import java.util.Optional;
 
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
+import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
-import com.github.mrstampy.checkers4j.api.recorder.CheckerGameRecorder;
-import com.github.mrstampy.checkers4j.api.recorder.Move;
-import com.github.mrstampy.checkers4j.api.recorder.RecordableCheckerGame;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
 import com.github.mrstampy.checkers4j.standard.CheckerBoard;
@@ -62,7 +60,7 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
  * reverse).<br>
  * 4. Kings can move in all valid directions and can be crowned on any board.
  */
-public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
+public class ThreeDStandardCheckerGame implements CheckerGame {
 
 	private static final long serialVersionUID = 6556554049093188540L;
 
@@ -81,8 +79,6 @@ public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
 	private long endTime;
 
 	private long startTime;
-
-	private CheckerGameRecorder recorder = new CheckerGameRecorder();
 
 	/**
 	 * Instantiates a new threeD standard checker game with two boards.
@@ -195,8 +191,6 @@ public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
 	 */
 	@Override
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
-		recorder.addMove(getGameId(), pieceColour, pieceNumber, toPosition);
-
 		moveCheck(pieceColour, pieceNumber, toPosition);
 
 		beginTurn(pieceColour);
@@ -1117,16 +1111,6 @@ public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
 		public int getAbsolutePosition() {
 			return absolutePosition;
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.github.mrstampy.checkers4j.ReplayableCheckerGame#getMoves()
-	 */
-	@Override
-	public List<Move> getMoves() {
-		return recorder.getMoves();
 	}
 
 }
