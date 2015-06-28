@@ -18,6 +18,7 @@
  */
 package com.github.mrstampy.checkers4j;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +37,9 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException;
  * @author burton
  *
  */
-public class GameDiffWrapper {
+public class GameDiffWrapper implements Serializable {
+
+	private static final long serialVersionUID = -1250327775120196110L;
 
 	private CheckerGame checkerGame;
 

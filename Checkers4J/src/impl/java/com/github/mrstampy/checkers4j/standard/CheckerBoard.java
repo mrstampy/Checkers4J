@@ -18,6 +18,8 @@
  */
 package com.github.mrstampy.checkers4j.standard;
 
+import java.io.Serializable;
+
 import com.github.mrstampy.checkers4j.Piece;
 
 // TODO: Auto-generated Javadoc
@@ -30,8 +32,10 @@ import com.github.mrstampy.checkers4j.Piece;
  * @author burton
  *
  */
-public class CheckerBoard {
+public class CheckerBoard implements Serializable {
 
+	private static final long serialVersionUID = -176765182830578438L;
+	
 	private Piece[][] board;
 	private int width;
 	private int height;
