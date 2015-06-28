@@ -155,9 +155,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		int nb = getNumBoards();
 
 		for (int i = 0; i < nb; i++) {
-			StandardCheckerGame scg = new StandardCheckerGame(rules);
-			scg.setAutoEndTurn(false);
-			boards.add(scg);
+			boards.add(new StandardCheckerGame(rules));
 		}
 
 		setGameState(GameState.INITIALIZED);
