@@ -197,9 +197,7 @@ public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
 		recorder.addMove(getGameId(), pieceColour, pieceNumber, toPosition);
 
-		assert getRules().isValidPieceColour(pieceColour);
-		assert isValidPosition(toPosition);
-		assert isValidPieceNumber(pieceNumber);
+		moveCheck(pieceColour, pieceNumber, toPosition);
 
 		beginTurn(pieceColour);
 
@@ -229,6 +227,20 @@ public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
 		endOfGameCheck(piece);
 
 		return getState();
+	}
+
+	private void moveCheck(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
+		assert getRules().isValidPieceColour(pieceColour);
+
+		if (!isValidPosition(toPosition)) {
+			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_VALUE, "To position "
+					+ toPosition + " is not valid");
+		}
+
+		if (!isValidPieceNumber(pieceNumber)) {
+			throw new CheckersStateException(pieceColour, pieceNumber, toPosition, ErrorState.ILLEGAL_VALUE, "Piece number "
+					+ pieceNumber + " is not valid");
+		}
 	}
 
 	private Piece checkPiece(int pieceColour, int pieceNumber, int toPosition, int boardIdx)
