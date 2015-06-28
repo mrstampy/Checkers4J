@@ -34,7 +34,7 @@ public class ThreeDStandardCheckerRules extends StandardCheckerRules {
 	private int numBoards;
 
 	/**
-	 * Instantiates a new multi dimensional standard checker rules.
+	 * Instantiates a new ThreeD standard checker rules.
 	 *
 	 * @param numBoards
 	 *          the num boards
@@ -44,7 +44,7 @@ public class ThreeDStandardCheckerRules extends StandardCheckerRules {
 	}
 
 	/**
-	 * Instantiates a new multi dimensional standard checker rules.
+	 * Instantiates a new ThreeD standard checker rules.
 	 *
 	 * @param boardWidth
 	 *          the board width
@@ -56,7 +56,7 @@ public class ThreeDStandardCheckerRules extends StandardCheckerRules {
 	}
 
 	/**
-	 * Instantiates a new multi dimensional standard checker rules.
+	 * Instantiates a new ThreeD standard checker rules.
 	 *
 	 * @param numBoards
 	 *          the num boards
