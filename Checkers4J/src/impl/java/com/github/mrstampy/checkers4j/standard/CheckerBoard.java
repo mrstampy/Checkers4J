@@ -35,7 +35,7 @@ import com.github.mrstampy.checkers4j.Piece;
 public class CheckerBoard implements Serializable {
 
 	private static final long serialVersionUID = -176765182830578438L;
-	
+
 	private Piece[][] board;
 	private int width;
 	private int height;

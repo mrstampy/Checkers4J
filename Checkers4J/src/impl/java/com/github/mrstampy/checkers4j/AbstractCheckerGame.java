@@ -30,6 +30,9 @@ import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
+import com.github.mrstampy.checkers4j.recorder.CheckerGameRecorder;
+import com.github.mrstampy.checkers4j.recorder.Move;
+import com.github.mrstampy.checkers4j.recorder.RecordableCheckerGame;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -50,7 +53,7 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
  * @author burton
  *
  */
-public abstract class AbstractCheckerGame implements CheckerGame {
+public abstract class AbstractCheckerGame implements RecordableCheckerGame {
 	private static final long serialVersionUID = -3616896688205945975L;
 
 	private long gameId = -1;
@@ -80,6 +83,9 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	private boolean draw = false;
 
 	private boolean autoEndTurn = true;
+
+	/** The recorder. */
+	protected CheckerGameRecorder recorder = new CheckerGameRecorder();
 
 	/**
 	 * Returns the underlying list of all pieces. Use {@link #getState()} if only
@@ -200,6 +206,8 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	 */
 	@Override
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
+		recorder.addMove(getGameId(), pieceColour, pieceNumber, toPosition);
+
 		beginTurn(pieceColour);
 
 		if (GameState.STARTED != getGameState()) {
@@ -225,6 +233,16 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 		endOfGameCheck(piece);
 
 		return getState();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.ReplayableCheckerGame#getMoves()
+	 */
+	@Override
+	public List<Move> getMoves() {
+		return recorder.getMoves();
 	}
 
 	/**

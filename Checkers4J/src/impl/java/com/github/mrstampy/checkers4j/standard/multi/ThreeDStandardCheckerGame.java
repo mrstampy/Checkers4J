@@ -30,10 +30,12 @@ import java.util.Optional;
 
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
-import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
+import com.github.mrstampy.checkers4j.recorder.CheckerGameRecorder;
+import com.github.mrstampy.checkers4j.recorder.Move;
+import com.github.mrstampy.checkers4j.recorder.RecordableCheckerGame;
 import com.github.mrstampy.checkers4j.standard.CheckerBoard;
 import com.github.mrstampy.checkers4j.standard.StandardCheckerGame;
 import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
@@ -60,7 +62,7 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
  * reverse).<br>
  * 4. Kings can move in all valid directions and can be crowned on any board.
  */
-public class ThreeDStandardCheckerGame implements CheckerGame {
+public class ThreeDStandardCheckerGame implements RecordableCheckerGame {
 
 	private static final long serialVersionUID = 6556554049093188540L;
 
@@ -79,6 +81,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	private long endTime;
 
 	private long startTime;
+
+	private CheckerGameRecorder recorder = new CheckerGameRecorder();
 
 	/**
 	 * Instantiates a new threeD standard checker game with two boards.
@@ -191,6 +195,8 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 */
 	@Override
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException {
+		recorder.addMove(getGameId(), pieceColour, pieceNumber, toPosition);
+
 		assert getRules().isValidPieceColour(pieceColour);
 		assert isValidPosition(toPosition);
 		assert isValidPieceNumber(pieceNumber);
@@ -1041,7 +1047,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	public static class Coordinates implements Serializable {
 
 		private static final long serialVersionUID = -4879987415777690375L;
-		
+
 		/** The absolute position. */
 		int x, y, z, absolutePosition;
 
@@ -1099,6 +1105,16 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 		public int getAbsolutePosition() {
 			return absolutePosition;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.mrstampy.checkers4j.ReplayableCheckerGame#getMoves()
+	 */
+	@Override
+	public List<Move> getMoves() {
+		return recorder.getMoves();
 	}
 
 }
