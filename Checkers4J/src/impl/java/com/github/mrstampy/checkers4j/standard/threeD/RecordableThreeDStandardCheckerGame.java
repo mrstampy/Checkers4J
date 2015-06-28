@@ -81,16 +81,6 @@ public class RecordableThreeDStandardCheckerGame extends ThreeDStandardCheckerGa
 		super(numBoards, boardWidth, boardHeight);
 	}
 
-	/**
-	 * Instantiates a new recordable three d standard checker game.
-	 *
-	 * @param rules
-	 *          the rules
-	 */
-	public RecordableThreeDStandardCheckerGame(ThreeDStandardCheckerRules rules) {
-		super(rules);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
