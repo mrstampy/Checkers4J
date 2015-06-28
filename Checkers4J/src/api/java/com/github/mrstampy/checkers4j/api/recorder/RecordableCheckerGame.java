@@ -19,6 +19,7 @@
 package com.github.mrstampy.checkers4j.api.recorder;
 
 import com.github.mrstampy.checkers4j.api.CheckerGame;
+import com.github.mrstampy.checkers4j.api.CheckerRules;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -27,5 +28,5 @@ import com.github.mrstampy.checkers4j.api.CheckerGame;
  * @author burton
  * @see CheckerGameRecorder
  */
-public interface RecordableCheckerGame extends CheckerGame, Recordable {
+public interface RecordableCheckerGame<RULES extends CheckerRules> extends CheckerGame<RULES>, Recordable {
 }

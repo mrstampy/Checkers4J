@@ -31,7 +31,8 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException;
  * A {@link ThreeDStandardCheckerGame} which records moves, made available via
  * {@link RecordableCheckerGame#getMoves()}.
  */
-public class RecordableThreeDStandardCheckerGame extends ThreeDStandardCheckerGame implements RecordableCheckerGame {
+public class RecordableThreeDStandardCheckerGame extends ThreeDStandardCheckerGame implements
+		RecordableCheckerGame<ThreeDStandardCheckerRules> {
 
 	private static final long serialVersionUID = -3454607901440192044L;
 

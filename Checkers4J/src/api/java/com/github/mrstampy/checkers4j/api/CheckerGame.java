@@ -29,7 +29,7 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 /**
  * The Interface CheckerGame.
  */
-public interface CheckerGame extends Serializable {
+public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 
 	/**
 	 * Id for uniquely identifying a specific game.
@@ -44,7 +44,7 @@ public interface CheckerGame extends Serializable {
 	 * @param rules
 	 *          the rules
 	 */
-	void initialize(CheckerRules rules);
+	void initialize(RULES rules);
 
 	/**
 	 * Must be invoked prior to {@link #move(int, int, int)}ing.
@@ -218,7 +218,7 @@ public interface CheckerGame extends Serializable {
 	 *
 	 * @return the rules
 	 */
-	CheckerRules getRules();
+	RULES getRules();
 
 	/**
 	 * Returns true if a player's turn is to automatically end after a move. If

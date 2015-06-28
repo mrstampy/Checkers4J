@@ -21,7 +21,6 @@ package com.github.mrstampy.checkers4j.standard;
 import java.util.List;
 
 import com.github.mrstampy.checkers4j.PieceState;
-import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.api.recorder.CheckerGameRecorder;
 import com.github.mrstampy.checkers4j.api.recorder.Move;
 import com.github.mrstampy.checkers4j.api.recorder.RecordableCheckerGame;
@@ -32,7 +31,8 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException;
  * A {@link StandardCheckerGame} which records moves, made available by
  * {@link RecordableCheckerGame#getMoves()}
  */
-public abstract class RecordableStandardCheckerGame extends StandardCheckerGame implements RecordableCheckerGame {
+public class RecordableStandardCheckerGame extends StandardCheckerGame implements
+		RecordableCheckerGame<StandardCheckerRules> {
 
 	private static final long serialVersionUID = 5238272702671148986L;
 
@@ -52,7 +52,7 @@ public abstract class RecordableStandardCheckerGame extends StandardCheckerGame 
 	 * @param checkerRules
 	 *          the checker rules
 	 */
-	public RecordableStandardCheckerGame(CheckerRules checkerRules) {
+	public RecordableStandardCheckerGame(StandardCheckerRules checkerRules) {
 		super(checkerRules);
 	}
 

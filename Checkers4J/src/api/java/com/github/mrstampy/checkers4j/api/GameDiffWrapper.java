@@ -41,7 +41,7 @@ public class GameDiffWrapper implements Serializable {
 
 	private static final long serialVersionUID = -1250327775120196110L;
 
-	private CheckerGame checkerGame;
+	private CheckerGame<?> checkerGame;
 
 	@SuppressWarnings("unchecked")
 	private List<PieceState> currentState = Collections.EMPTY_LIST;
@@ -53,7 +53,7 @@ public class GameDiffWrapper implements Serializable {
 	 *
 	 * @return the checker game
 	 */
-	public CheckerGame getCheckerGame() {
+	public CheckerGame<?> getCheckerGame() {
 		return checkerGame;
 	}
 
@@ -63,7 +63,7 @@ public class GameDiffWrapper implements Serializable {
 	 * @param checkerGame
 	 *          the new checker game
 	 */
-	public void setCheckerGame(CheckerGame checkerGame) {
+	public void setCheckerGame(CheckerGame<?> checkerGame) {
 		this.checkerGame = checkerGame;
 	}
 

@@ -50,12 +50,12 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
  * @author burton
  *
  */
-public abstract class AbstractCheckerGame implements CheckerGame {
+public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements CheckerGame<RULES> {
 	private static final long serialVersionUID = -3616896688205945975L;
 
 	private long gameId = -1;
 
-	private CheckerRules rules;
+	private RULES rules;
 
 	/** The by colour. */
 	protected Map<Integer, List<Piece>> byColour = new HashMap<>();
@@ -100,7 +100,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	 * .checkers4j.api.CheckerRules)
 	 */
 	@Override
-	public void initialize(CheckerRules rules) {
+	public void initialize(RULES rules) {
 		assert rules != null;
 
 		this.rules = rules;
@@ -590,7 +590,7 @@ public abstract class AbstractCheckerGame implements CheckerGame {
 	 * @see com.github.mrstampy.checkers4j.api.CheckerGame#getRules()
 	 */
 	@Override
-	public CheckerRules getRules() {
+	public RULES getRules() {
 		return rules;
 	}
 

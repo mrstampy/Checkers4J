@@ -31,7 +31,6 @@ import java.util.Optional;
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
 import com.github.mrstampy.checkers4j.api.CheckerGame;
-import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
 import com.github.mrstampy.checkers4j.standard.CheckerBoard;
@@ -60,7 +59,7 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
  * reverse).<br>
  * 4. Kings can move in all valid directions and can be crowned on any board.
  */
-public class ThreeDStandardCheckerGame implements CheckerGame {
+public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardCheckerRules> {
 
 	private static final long serialVersionUID = 6556554049093188540L;
 
@@ -153,7 +152,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 *          the rules
 	 */
 	@Override
-	public void initialize(CheckerRules rules) {
+	public void initialize(ThreeDStandardCheckerRules rules) {
 		int nb = getNumBoards();
 
 		for (int i = 0; i < nb; i++) {
@@ -947,7 +946,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame {
 	 * @return the rules
 	 */
 	@Override
-	public CheckerRules getRules() {
+	public ThreeDStandardCheckerRules getRules() {
 		return rules;
 	}
 

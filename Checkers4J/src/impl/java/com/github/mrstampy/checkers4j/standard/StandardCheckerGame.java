@@ -46,7 +46,7 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
  * 5. {@link #hasTurn()} will return the player with a 'moves lock' on the game,
  * -1 if none.<br>
  */
-public class StandardCheckerGame extends AbstractCheckerGame {
+public class StandardCheckerGame extends AbstractCheckerGame<StandardCheckerRules> {
 	private static final long serialVersionUID = -9117782259107654402L;
 
 	/** The Constant GAME_NAME. */
@@ -67,7 +67,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	 * @param checkerRules
 	 *          the checker rules
 	 */
-	public StandardCheckerGame(CheckerRules checkerRules) {
+	public StandardCheckerGame(StandardCheckerRules checkerRules) {
 		initialize(checkerRules);
 	}
 
@@ -89,7 +89,7 @@ public class StandardCheckerGame extends AbstractCheckerGame {
 	 * .mrstampy.checkers4j.api.CheckerRules)
 	 */
 	@Override
-	public void initialize(CheckerRules rules) {
+	public void initialize(StandardCheckerRules rules) {
 		super.initialize(rules);
 
 		board = new CheckerBoard(rules.getBoardWidth(), rules.getBoardHeight());
