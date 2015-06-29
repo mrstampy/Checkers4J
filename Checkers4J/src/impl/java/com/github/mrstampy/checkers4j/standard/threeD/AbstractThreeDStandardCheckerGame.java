@@ -35,7 +35,7 @@ import com.github.mrstampy.checkers4j.standard.StandardCheckerRules;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class AbstractThreeDStandardCheckerGame.
+ * Convenience superclass of 3D standard checker games.
  */
 public abstract class AbstractThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardCheckerRules> {
 
@@ -288,6 +288,7 @@ public abstract class AbstractThreeDStandardCheckerGame implements CheckerGame<T
 	/**
 	 * Draw.
 	 */
+	@Writable
 	@Override
 	public void draw() {
 		boards.forEach(scg -> scg.draw());
@@ -338,6 +339,7 @@ public abstract class AbstractThreeDStandardCheckerGame implements CheckerGame<T
 	 * @param gameId
 	 *          the new game id
 	 */
+	@Writable
 	public void setGameId(long gameId) {
 		this.gameId = gameId;
 	}
