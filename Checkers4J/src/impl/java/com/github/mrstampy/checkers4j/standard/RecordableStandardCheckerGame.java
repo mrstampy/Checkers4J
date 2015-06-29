@@ -29,7 +29,7 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 // TODO: Auto-generated Javadoc
 /**
  * A {@link StandardCheckerGame} which records moves, made available by
- * {@link RecordableCheckerGame#getMoves()}
+ * {@link RecordableCheckerGame#getMoves()}.
  */
 public class RecordableStandardCheckerGame extends StandardCheckerGame implements
 		RecordableCheckerGame<StandardCheckerRules> {
@@ -76,6 +76,17 @@ public class RecordableStandardCheckerGame extends StandardCheckerGame implement
 	@Override
 	public List<Move> getMoves() {
 		return recorder.getMoves();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.github.mrstampy.checkers4j.standard.StandardCheckerGame#getGameName()
+	 */
+	@Override
+	public String getGameName() {
+		return "Recordable " + GAME_NAME;
 	}
 
 }

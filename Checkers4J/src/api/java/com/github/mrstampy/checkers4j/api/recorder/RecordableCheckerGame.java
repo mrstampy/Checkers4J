@@ -26,6 +26,8 @@ import com.github.mrstampy.checkers4j.api.CheckerRules;
  * Defines the interface for games which record moves.
  *
  * @author burton
+ * @param <RULES>
+ *          the generic type
  * @see CheckerGameRecorder
  */
 public interface RecordableCheckerGame<RULES extends CheckerRules> extends CheckerGame<RULES>, Recordable {

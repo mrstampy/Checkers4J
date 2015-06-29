@@ -106,4 +106,15 @@ public class RecordableThreeDStandardCheckerGame extends ThreeDStandardCheckerGa
 		return recorder.getMoves();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.github.mrstampy.checkers4j.standard.threeD.ThreeDStandardCheckerGame
+	 * #getGameName()
+	 */
+	@Override
+	public String getGameName() {
+		return "Recordable " + GAME_NAME;
+	}
 }

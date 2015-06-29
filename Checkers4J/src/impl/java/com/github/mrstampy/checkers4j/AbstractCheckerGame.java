@@ -48,9 +48,10 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
  * player via {@link #getLastPlayer()}.<br>
  * 5. {@link #hasTurn()} will return the player with a 'moves lock' on the game,
  * -1 if none.<br>
- * 
- * @author burton
  *
+ * @author burton
+ * @param <RULES>
+ *          the generic type
  */
 public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements CheckerGame<RULES> {
 	private static final long serialVersionUID = -3616896688205945975L;

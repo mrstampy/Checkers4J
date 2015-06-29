@@ -29,6 +29,9 @@ import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 // TODO: Auto-generated Javadoc
 /**
  * The Interface CheckerGame.
+ *
+ * @param <RULES>
+ *          the generic type
  */
 public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 
