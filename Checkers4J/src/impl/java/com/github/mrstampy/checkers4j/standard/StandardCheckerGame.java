@@ -27,6 +27,8 @@ import java.util.List;
 import com.github.mrstampy.checkers4j.AbstractCheckerGame;
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
+import com.github.mrstampy.checkers4j.annotation.ExposeInternals;
+import com.github.mrstampy.checkers4j.annotation.Writable;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
@@ -140,6 +142,7 @@ public class StandardCheckerGame extends AbstractCheckerGame<StandardCheckerRule
 	 * @throws CheckersStateException
 	 *           the checkers state exception
 	 */
+	@Writable
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toX, int toY) throws CheckersStateException {
 		return move(pieceColour, pieceNumber, getPositionFromGrid(toX, toY));
 	}
@@ -163,6 +166,7 @@ public class StandardCheckerGame extends AbstractCheckerGame<StandardCheckerRule
 	 *
 	 * @return the board
 	 */
+	@ExposeInternals
 	public CheckerBoard getBoard() {
 		return board;
 	}

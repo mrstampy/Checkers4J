@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.github.mrstampy.checkers4j.annotation.ExposeInternals;
+import com.github.mrstampy.checkers4j.annotation.Writable;
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.api.CheckerRules;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
@@ -88,6 +90,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 *
 	 * @return the full state
 	 */
+	@ExposeInternals
 	public List<Piece> getFullState() {
 		return state;
 	}
@@ -350,6 +353,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param gameId
 	 *          the new game id
 	 */
+	@Writable
 	public void setGameId(long gameId) {
 		this.gameId = gameId;
 	}
@@ -447,6 +451,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param winningColour
 	 *          the new winning colour
 	 */
+	@Writable
 	public void setWinningColour(int winningColour) {
 		this.winningColour = winningColour;
 	}
@@ -467,6 +472,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param startTime
 	 *          the new start time
 	 */
+	@Writable
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
 	}
@@ -487,6 +493,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param endTime
 	 *          the new end time
 	 */
+	@Writable
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 	}
@@ -507,6 +514,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param gameState
 	 *          the new game state
 	 */
+	@Writable
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
@@ -549,6 +557,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param nextPlayer
 	 *          the new next player
 	 */
+	@Writable
 	public void setNextPlayer(int nextPlayer) {
 		this.nextPlayer = nextPlayer;
 	}
@@ -569,6 +578,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param draw
 	 *          the new draw
 	 */
+	@Writable
 	public void setDraw(boolean draw) {
 		this.draw = draw;
 	}
@@ -610,6 +620,7 @@ public abstract class AbstractCheckerGame<RULES extends CheckerRules> implements
 	 * @param autoEndTurn
 	 *          the new auto end turn
 	 */
+	@Writable
 	public void setAutoEndTurn(boolean autoEndTurn) {
 		this.autoEndTurn = autoEndTurn;
 	}

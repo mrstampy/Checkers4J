@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
+import com.github.mrstampy.checkers4j.annotation.Writable;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 
 // TODO: Auto-generated Javadoc
@@ -44,6 +45,7 @@ public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 	 * @param rules
 	 *          the rules
 	 */
+	@Writable
 	void initialize(RULES rules);
 
 	/**
@@ -52,6 +54,7 @@ public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 	 * @param pieceColour
 	 *          the piece colour
 	 */
+	@Writable
 	void beginTurn(int pieceColour);
 
 	/**
@@ -68,6 +71,7 @@ public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 	 * @throws CheckersStateException
 	 *           the checkers state exception
 	 */
+	@Writable
 	List<PieceState> move(int pieceColour, int pieceNumber, int toPosition) throws CheckersStateException;
 
 	/**
@@ -77,6 +81,7 @@ public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 	 * @param pieceColour
 	 *          the piece colour
 	 */
+	@Writable
 	void endTurn(int pieceColour);
 
 	/**
@@ -101,6 +106,7 @@ public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 	 * @param state
 	 *          the new state
 	 */
+	@Writable
 	void setState(List<Piece> state);
 
 	/**
@@ -204,6 +210,7 @@ public interface CheckerGame<RULES extends CheckerRules> extends Serializable {
 	 * Invoked when pieces can move but no end to the game can be had. Must be
 	 * agreed by both players before invoking.
 	 */
+	@Writable
 	void draw();
 
 	/**

@@ -155,7 +155,9 @@ public interface CheckerRules extends Serializable {
 	int getY(int position);
 
 	/**
-	 * Gets the piece number offset.
+	 * Gets the piece number offset, used for multi-board games. The value starts
+	 * at zero (single board games) and increases by one for each invocation for
+	 * multi board games.
 	 *
 	 * @return the piece number offset
 	 */

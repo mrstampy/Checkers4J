@@ -30,6 +30,8 @@ import java.util.Optional;
 
 import com.github.mrstampy.checkers4j.Piece;
 import com.github.mrstampy.checkers4j.PieceState;
+import com.github.mrstampy.checkers4j.annotation.ExposeInternals;
+import com.github.mrstampy.checkers4j.annotation.Writable;
 import com.github.mrstampy.checkers4j.api.CheckerGame;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException;
 import com.github.mrstampy.checkers4j.ex.CheckersStateException.ErrorState;
@@ -332,8 +334,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 
 		CheckerBoard board = scg.getBoard();
 
-		Piece p = board.getBoardPiece(x, y);
-		return p;
+		return board.getBoardPiece(x, y);
 	}
 
 	/**
@@ -354,6 +355,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @throws CheckersStateException
 	 *           the checkers state exception
 	 */
+	@Writable
 	public List<PieceState> move(int pieceColour, int pieceNumber, int toX, int toY, int toBoardIdx)
 			throws CheckersStateException {
 		return move(pieceColour, pieceNumber, getAbsolutePosition(toX, toY, toBoardIdx));
@@ -541,7 +543,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	public int getBoardIndex(int absolutePosition) {
 		assert absolutePosition >= 0;
 
-		int boardIdx = absolutePosition / getNumBoards();
+		int boardIdx = absolutePosition / (getRules().getBoardWidth() * getRules().getBoardHeight());
 		assert isValidY(boardIdx);
 
 		return boardIdx;
@@ -661,6 +663,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @param state
 	 *          the state
 	 */
+	@Writable
 	public void setState(Map<Integer, List<Piece>> state) {
 		assert state != null && state.size() == getNumBoards();
 
@@ -682,6 +685,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @return the state by board
 	 * @see #getStateByBoard()
 	 */
+	@ExposeInternals
 	public Map<Integer, List<Piece>> getFullStateByBoard() {
 		Map<Integer, List<Piece>> map = new HashMap<>();
 
@@ -751,6 +755,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @param winningColour
 	 *          the new winning colour
 	 */
+	@Writable
 	public void setWinningColour(int winningColour) {
 		boards.forEach(scg -> scg.setWinningColour(winningColour));
 	}
@@ -902,7 +907,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 
 		boolean plusMove = plusMt && !plusOOB;
 		boolean minusMove = minusMt && !minusOOB;
-		
+
 		return plusMove || minusMove;
 	}
 
@@ -1003,6 +1008,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @param autoEndTurn
 	 *          the new auto end turn
 	 */
+	@Writable
 	public void setAutoEndTurn(boolean autoEndTurn) {
 		boards.forEach(scg -> scg.setAutoEndTurn(autoEndTurn));
 	}
@@ -1014,6 +1020,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 *          the new game state
 	 */
 	@SuppressWarnings("incomplete-switch")
+	@Writable
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 
@@ -1035,6 +1042,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @param startTime
 	 *          the new start time
 	 */
+	@Writable
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
 
@@ -1047,6 +1055,7 @@ public class ThreeDStandardCheckerGame implements CheckerGame<ThreeDStandardChec
 	 * @param endTime
 	 *          the new end time
 	 */
+	@Writable
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 
